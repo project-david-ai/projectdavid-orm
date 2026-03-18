@@ -1,4 +1,4 @@
-name: Lint, Test, Tag, and Publish
+# 🧹 Lint, Test, Tag, and Publish
 
 on:
   push:
