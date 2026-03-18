@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.1...v1.1.2) (2026-03-18)
+
+
+### Bug Fixes
+
+* remove unused id-token permission from test_tag_release workflow ([a34000d](https://github.com/project-david-ai/projectdavid-orm/commit/a34000da052f404db798da691ab2c5fa5815eeeb))
+
 ## [1.1.1](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.0...v1.1.1) (2026-03-18)
 
 
