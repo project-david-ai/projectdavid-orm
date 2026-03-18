@@ -10,7 +10,7 @@ readme = "README.md"
 authors = [
   { name = "Francis N.", email = "francis.neequaye@projectdavid.co.uk" }
 ]
-license = { text = "MIT" }
+license = { text = "Polyform" }
 keywords = ["orm", "sqlalchemy", "models", "projectdavid", "internal"]
 requires-python = ">=3.10"
 
@@ -18,7 +18,8 @@ dependencies = [
   "sqlalchemy>=2.0",
   "pymysql",
   "pydantic>=2.0",
-  "python-dotenv"
+  "python-dotenv",
+  "projectdavid_common==0.50.0",
 ]
 
 [project.optional-dependencies]
