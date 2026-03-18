@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "projectdavid-orm"
+version = "0.1.0"
+description = "Shared SQLAlchemy ORM models for ProjectDavid services"
+readme = "README.md"
+authors = [
+  { name = "Francis N.", email = "francis.neequaye@projectdavid.co.uk" }
+]
+license = { text = "MIT" }
+keywords = ["orm", "sqlalchemy", "models", "projectdavid", "internal"]
+requires-python = ">=3.10"
+
+dependencies = [
+  "sqlalchemy>=2.0",
+  "pymysql",
+  "pydantic>=2.0",
+  "python-dotenv"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+  "black",
+  "isort"
+]
+
+[project.urls]
+Homepage = "https://github.com/frankie336/projectdavid-orm"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["projectdavid_orm", "projectdavid_orm.*"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+skip-string-normalization = true
+
+[tool.flake8]
+max-line-length = 200
+extend-ignore = ["E203"]
+exclude = [".venv", ".git", "__pycache__", "build", "dist"]
+
+[tool.isort]
+profile = "black"
