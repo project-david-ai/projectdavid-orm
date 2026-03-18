@@ -7,9 +7,10 @@ on:
 
 permissions:
   contents: write
+  id-token: write
 
 env:
-  TEST_PYPI_URL: https://test.pypi.org/legacy/
+  TEST_PYPI_URL: https://test.pypi.org/simple/
   PROD_PYPI_URL: https://upload.pypi.org/legacy/
 
 jobs:
@@ -39,10 +40,10 @@ jobs:
           pip install --index-url https://pypi.org/simple/ -e ".[dev]"
 
       - name: ⚫ Run Black (Format Check)
-        run: black --check src/ tests/
+        run: black --check .
 
       - name: ⚫ Run isort (Import Sort Check)
-        run: isort --check src/ tests/
+        run: isort --check .
 
   test:
     name: ✅ Test on Python ${{ matrix.python-version }}
@@ -145,12 +146,11 @@ jobs:
             exit 1
           fi
 
-      - name: 📦 Publish to PyPI or TestPyPI
+      - name: 📦 Publish to PyPI or Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         if: steps.repo.outputs.pypi_token_name != ''
         with:
           user: "__token__"
           password: ${{ secrets[steps.repo.outputs.pypi_token_name] }}
-          repository-url: ${{ steps.repo.outputs.repo_url }}
+          repository_url: ${{ steps.repo.outputs.repo_url }}
           skip-existing: true
-          attestations: false
