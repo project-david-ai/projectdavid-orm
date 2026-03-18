@@ -13,7 +13,6 @@ ProjectDavid is a self-hosted, multi-provider LLM runtime API. As the platform g
 Any service that needs direct DB access simply installs this package and imports the models it needs.
 
 ---
-
 ## Installation
 ```bash
 pip install projectdavid-orm
