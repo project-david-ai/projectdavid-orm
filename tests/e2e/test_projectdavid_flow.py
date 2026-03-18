@@ -17,9 +17,7 @@ BASE_URL = os.getenv("PROJECTDAVID_BASE_URL", "http://localhost:80")
 ENTITIES_API_KEY = os.getenv("ENTITIES_API_KEY")
 HYPERBOLIC_API_KEY = os.getenv("HYPERBOLIC_API_KEY")
 # Use a default or environment variable for user_id
-DEFAULT_USER_ID = (
-    "user_kUKV8octgG2aMc7kxAcD3i"  # Consider if this should be dynamic or from env
-)
+DEFAULT_USER_ID = "user_kUKV8octgG2aMc7kxAcD3i"  # Consider if this should be dynamic or from env
 USER_ID = os.getenv("PROJECTDAVID_USER_ID", DEFAULT_USER_ID)
 ASSISTANT_NAME = "ci_test_assistant_" + str(int(time.time()))  # Unique name for CI
 MODEL_PROVIDER = os.getenv("PROJECTDAVID_MODEL_PROVIDER", "Hyperbolic")
@@ -32,9 +30,7 @@ def check_env_vars():
     required_vars = ["ENTITIES_API_KEY", "HYPERBOLIC_API_KEY"]
     missing_vars = [var for var in required_vars if not globals().get(var)]
     if missing_vars:
-        print(
-            f"❌ Error: Missing required environment variables: {', '.join(missing_vars)}"
-        )
+        print(f"❌ Error: Missing required environment variables: {', '.join(missing_vars)}")
         print("Please set them in your environment or a .env file.")
         sys.exit(1)  # Exit with error code
     print("✅ Required environment variables found.")
@@ -108,9 +104,7 @@ def run_flow_test():
     run = None  # Initialize
     try:
         print(f"Creating run in thread {actual_thread_id}...")
-        run = client.runs.create_run(
-            assistant_id=assistant.id, thread_id=actual_thread_id
-        )
+        run = client.runs.create_run(assistant_id=assistant.id, thread_id=actual_thread_id)
         print(f"✅ Created run with ID: {run.id}")
     except Exception as e:
         print(f"❌ Error creating run: {e}")

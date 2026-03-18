@@ -8,7 +8,13 @@ from projectdavid_common import ValidationInterface
 from projectdavid_common.projectdavid_orm.base import Base
 from projectdavid_common.schemas.enums import StatusEnum
 from projectdavid_common.utilities.logging_service import LoggingUtility
-from sqlalchemy import JSON, BigInteger, Boolean, Column, DateTime
+from sqlalchemy import (
+    JSON,
+    BigInteger,
+    Boolean,
+    Column,
+    DateTime,
+)
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy import (
     Float,
@@ -129,9 +135,7 @@ class User(Base):
         comment="Internal unique identifier for the user (e.g., user_...)",
     )
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(
-        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
-    )
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     is_admin = Column(
         Boolean,
         default=False,
@@ -156,9 +160,7 @@ class User(Base):
     full_name = Column(String(255), nullable=True, comment="User's full display name")
     given_name = Column(String(128), nullable=True, comment="First name")
     family_name = Column(String(128), nullable=True, comment="Last name")
-    picture_url = Column(
-        Text, nullable=True, comment="URL to the user's profile picture"
-    )
+    picture_url = Column(Text, nullable=True, comment="URL to the user's profile picture")
 
     oauth_provider = Column(
         String(50),
@@ -192,20 +194,17 @@ class User(Base):
         "Sandbox", back_populates="user", cascade="all, delete-orphan", lazy="select"
     )
     vector_stores = relationship("VectorStore", back_populates="user", lazy="select")
-    files = relationship(
-        "File", back_populates="user", cascade="all, delete-orphan", lazy="select"
-    )
+    files = relationship("File", back_populates="user", cascade="all, delete-orphan", lazy="select")
     runs = relationship("Run", back_populates="user", lazy="select")
 
     audit_logs = relationship("AuditLog", back_populates="user", lazy="dynamic")
 
     __table_args__ = (
-        UniqueConstraint(
-            "oauth_provider", "provider_user_id", name="uq_user_oauth_provider_id"
-        ),
+        UniqueConstraint("oauth_provider", "provider_user_id", name="uq_user_oauth_provider_id"),
         Index("idx_user_email", "email"),
         Index("idx_user_is_admin", "is_admin"),
     )
+
 
 # ───────────────────────────────────────────────
 #  AUDIT LOGGING (GDPR & Enterprise Compliance)
@@ -266,9 +265,7 @@ class Thread(Base):
     meta_data = Column(JSON, nullable=False, default={})
     object = Column(String(64), nullable=False)
     tool_resources = Column(JSON, nullable=False, default={})
-    participants = relationship(
-        "User", secondary=thread_participants, back_populates="threads"
-    )
+    participants = relationship("User", secondary=thread_participants, back_populates="threads")
 
     # SET NULL on user deletion — thread record is preserved, ownership is cleared.
     # Application-level erase_user() handles physical cleanup of thread content.
@@ -719,9 +716,7 @@ class BatfishSnapshot(Base):
     user = relationship("User", lazy="select")
 
     __table_args__ = (
-        UniqueConstraint(
-            "user_id", "snapshot_name", name="uq_batfish_user_snapshot_name"
-        ),
+        UniqueConstraint("user_id", "snapshot_name", name="uq_batfish_user_snapshot_name"),
         Index("idx_batfish_user_id", "user_id"),
         Index("idx_batfish_status", "status"),
     )
@@ -849,9 +844,7 @@ class Dataset(Base):
         comment="Unix timestamp of soft-deletion.",
     )
 
-    training_jobs = relationship(
-        "TrainingJob", back_populates="dataset", lazy="dynamic"
-    )
+    training_jobs = relationship("TrainingJob", back_populates="dataset", lazy="dynamic")
 
     __table_args__ = (
         Index("idx_dataset_user_id", "user_id"),
@@ -862,9 +855,7 @@ class Dataset(Base):
 class TrainingJob(Base):
     __tablename__ = "training_jobs"
 
-    id = Column(
-        String(64), primary_key=True, index=True, comment="Opaque job ID e.g. tj_abc123"
-    )
+    id = Column(String(64), primary_key=True, index=True, comment="Opaque job ID e.g. tj_abc123")
     user_id = Column(
         String(64),
         ForeignKey("users.id", ondelete="CASCADE"),
@@ -952,17 +943,13 @@ class FineTunedModel(Base):
     )
     name = Column(String(128), nullable=False)
     description = Column(Text, nullable=True)
-    base_model = Column(
-        String(256), nullable=False, comment="Base model this was fine-tuned from."
-    )
+    base_model = Column(String(256), nullable=False, comment="Base model this was fine-tuned from.")
     hf_repo = Column(
         String(256),
         nullable=True,
         comment="HuggingFace repository ID e.g. your-org/your-model",
     )
-    storage_path = Column(
-        String(512), nullable=True, comment="Local Samba path to model weights."
-    )
+    storage_path = Column(String(512), nullable=True, comment="Local Samba path to model weights.")
     is_active = Column(
         Boolean,
         default=False,
@@ -990,9 +977,7 @@ class FineTunedModel(Base):
         comment="Unix timestamp of soft-deletion.",
     )
 
-    training_job = relationship(
-        "TrainingJob", back_populates="fine_tuned_model", lazy="select"
-    )
+    training_job = relationship("TrainingJob", back_populates="fine_tuned_model", lazy="select")
 
     __table_args__ = (
         Index("idx_finetunedmodel_user_id", "user_id"),
