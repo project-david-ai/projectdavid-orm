@@ -1,3 +1,15 @@
+# [1.1.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.0.0...v1.1.0) (2026-03-18)
+
+
+### Bug Fixes
+
+* remove redundant newline in README.md instructions ([dea758d](https://github.com/project-david-ai/projectdavid-orm/commit/dea758d4d80eb0e6f2b75e80e712652779afbe63))
+
+
+### Features
+
+* add version.py for managing application versioning ([6ec6e42](https://github.com/project-david-ai/projectdavid-orm/commit/6ec6e425eba9e790e2a4a4c24aea5fa60c1f1057))
+
 # 1.0.0 (2026-03-18)
 
 
