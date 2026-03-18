@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.0...v1.1.1) (2026-03-18)
+
+
+### Bug Fixes
+
+* update PyPI repository URLs and add attestations flag in test_tag_release workflow ([a2dca7e](https://github.com/project-david-ai/projectdavid-orm/commit/a2dca7e521732302f8d0acb86390f3f061aae07e))
+
 # [1.1.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.0.0...v1.1.0) (2026-03-18)
 
 
