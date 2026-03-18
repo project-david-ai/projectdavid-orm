@@ -10,7 +10,7 @@ permissions:
   id-token: write
 
 env:
-  TEST_PYPI_URL: https://test.pypi.org/simple/
+  TEST_PYPI_URL: https://test.pypi.org/legacy/
   PROD_PYPI_URL: https://upload.pypi.org/legacy/
 
 jobs:
@@ -152,5 +152,6 @@ jobs:
         with:
           user: "__token__"
           password: ${{ secrets[steps.repo.outputs.pypi_token_name] }}
-          repository_url: ${{ steps.repo.outputs.repo_url }}
+          repository-url: ${{ steps.repo.outputs.repo_url }}
           skip-existing: true
+          attestations: false
