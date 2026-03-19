@@ -19,7 +19,7 @@ dependencies = [
   "pymysql",
   "pydantic>=2.0",
   "python-dotenv",
-  "projectdavid_common==0.53.0",
+
 ]
 
 [project.optional-dependencies]
