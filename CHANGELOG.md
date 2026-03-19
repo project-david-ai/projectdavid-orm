@@ -1,3 +1,10 @@
+## [1.1.5](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.4...v1.1.5) (2026-03-18)
+
+
+### Bug Fixes
+
+* streamline test_tag_release workflow by removing `dev` branch logic and updating PyPI token configuration ([89a1be2](https://github.com/project-david-ai/projectdavid-orm/commit/89a1be2b410a1ce275f36e224fa407a4be4a1a26))
+
 ## [1.1.4](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.3...v1.1.4) (2026-03-18)
 
 
