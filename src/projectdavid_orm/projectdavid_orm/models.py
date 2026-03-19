@@ -782,10 +782,6 @@ class VectorStoreFile(Base):
 # Training API
 #
 # -------------------------------------------------------------------------------
-
-# src/api/training/models/models.py
-
-
 class Dataset(Base):
     __tablename__ = "datasets"
 
