@@ -70,25 +70,6 @@ user_assistants = Table(
 )
 
 
-# --- Enums & Context ---
-
-
-class StatusEnum(PyEnum):
-    deleted = "deleted"
-    active = "active"
-    queued = "queued"
-    in_progress = "in_progress"
-    pending_action = "action_required"
-    completed = "completed"
-    failed = "failed"
-    cancelling = "cancelling"
-    cancelled = "cancelled"
-    pending = "pending"
-    processing = "processing"
-    expired = "expired"
-    retrying = "retrying"
-
-
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
@@ -889,6 +870,12 @@ class TrainingJob(Base):
     )
     created_at = Column(BigInteger, default=lambda: int(time.time()), nullable=False)
     started_at = Column(BigInteger, nullable=True)
+    updated_at = Column(
+        BigInteger,
+        default=lambda: int(time.time()),
+        onupdate=lambda: int(time.time()),
+        nullable=False,
+    )
     completed_at = Column(BigInteger, nullable=True)
     failed_at = Column(BigInteger, nullable=True)
     last_error = Column(Text, nullable=True)
