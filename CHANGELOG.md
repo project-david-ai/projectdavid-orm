@@ -1,3 +1,11 @@
+## [1.1.6](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.5...v1.1.6) (2026-03-19)
+
+
+### Bug Fixes
+
+* remove redundant newline in README.md instructions ([81a423f](https://github.com/project-david-ai/projectdavid-orm/commit/81a423fb14dc4d46640b3a8d6b5748ddb794f720))
+* upgrade projectdavid_common to v0.53.0 and remove redundant comments in models.py ([ac95695](https://github.com/project-david-ai/projectdavid-orm/commit/ac9569594868bbcbcefe5987195518482fad962b))
+
 ## [1.1.5](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.4...v1.1.5) (2026-03-18)
 
 
