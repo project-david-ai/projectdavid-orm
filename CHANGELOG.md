@@ -1,3 +1,10 @@
+## [1.1.7](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.6...v1.1.7) (2026-03-19)
+
+
+### Bug Fixes
+
+* remove projectdavid_common dependency from pyproject.toml ([15fe2f7](https://github.com/project-david-ai/projectdavid-orm/commit/15fe2f79d6d2ac6ed5fdc59f71a8df891727aeb0))
+
 ## [1.1.6](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.5...v1.1.6) (2026-03-19)
 
 
