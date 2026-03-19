@@ -1,3 +1,11 @@
+## [1.1.9](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.8...v1.1.9) (2026-03-19)
+
+
+### Bug Fixes
+
+* add updated_at column to TrainingJobs table. ([bf438d8](https://github.com/project-david-ai/projectdavid-orm/commit/bf438d8856af88a03d41dab3b7cf4d5bd56ce339))
+* remove projectdavid_common dependency from pyproject.toml ([6537c42](https://github.com/project-david-ai/projectdavid-orm/commit/6537c42a1a7437c19a601fd154e655739c8f005b))
+
 ## [1.1.8](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.7...v1.1.8) (2026-03-19)
 
 
