@@ -760,9 +760,9 @@ class VectorStoreFile(Base):
 
 
 # ---------------------------------------------------------------------------
-# Training API
-#
-# -------------------------------------------------------------------------------
+# Training API Models
+# ---------------------------------------------------------------------------
+
 class Dataset(Base):
     __tablename__ = "datasets"
 
@@ -787,7 +787,6 @@ class Dataset(Base):
     )
 
     # Reference to the uploaded file in the core API files table.
-    # The actual Samba path is resolved via GET /v1/files/{file_id} at training time.
     file_id = Column(
         String(64),
         nullable=False,
@@ -795,7 +794,6 @@ class Dataset(Base):
         comment="Reference to the file_id in the core API files table.",
     )
 
-    # Populated by the training worker after it stages the file for training.
     storage_path = Column(
         String(512),
         nullable=True,
@@ -811,10 +809,17 @@ class Dataset(Base):
         default=StatusEnum.pending,
         comment="pending → processing → active → failed",
     )
+
+    # ── Timestamps ──────────────────────────────────────────────────────────
     created_at = Column(BigInteger, default=lambda: int(time.time()), nullable=False)
-    updated_at = Column(BigInteger, default=lambda: int(time.time()), nullable=False)
+    updated_at = Column(
+        BigInteger,
+        default=lambda: int(time.time()),
+        onupdate=lambda: int(time.time()),  # Fixed: Added auto-update
+        nullable=False
+    )
     deleted_at = Column(
-        Integer,
+        Integer,  # Standardized to Integer for soft-delete logic
         nullable=True,
         default=None,
         index=True,
@@ -868,14 +873,24 @@ class TrainingJob(Base):
         default=StatusEnum.queued,
         comment="queued → in_progress → completed | failed | cancelled",
     )
+
+    # ── Timestamps ──────────────────────────────────────────────────────────
     created_at = Column(BigInteger, default=lambda: int(time.time()), nullable=False)
-    started_at = Column(BigInteger, nullable=True)
     updated_at = Column(
         BigInteger,
         default=lambda: int(time.time()),
         onupdate=lambda: int(time.time()),
         nullable=False,
     )
+    deleted_at = Column(  # FIXED: Added missing column that caused the AttributeError
+        Integer,
+        nullable=True,
+        default=None,
+        index=True,
+        comment="Unix timestamp of soft-deletion.",
+    )
+
+    started_at = Column(BigInteger, nullable=True)
     completed_at = Column(BigInteger, nullable=True)
     failed_at = Column(BigInteger, nullable=True)
     last_error = Column(Text, nullable=True)
@@ -950,8 +965,15 @@ class FineTunedModel(Base):
         default=StatusEnum.processing,
         comment="processing → active → failed",
     )
+
+    # ── Timestamps ──────────────────────────────────────────────────────────
     created_at = Column(BigInteger, default=lambda: int(time.time()), nullable=False)
-    updated_at = Column(BigInteger, default=lambda: int(time.time()), nullable=False)
+    updated_at = Column(
+        BigInteger,
+        default=lambda: int(time.time()),
+        onupdate=lambda: int(time.time()),  # Fixed: Added auto-update
+        nullable=False
+    )
     deleted_at = Column(
         Integer,
         nullable=True,
