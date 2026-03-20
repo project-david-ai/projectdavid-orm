@@ -1,3 +1,13 @@
+## [1.1.11](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.10...v1.1.11) (2026-03-20)
+
+
+### Bug Fixes
+
+* add updated_at column to TrainingJobs table. ([18f38b7](https://github.com/project-david-ai/projectdavid-orm/commit/18f38b77802200038a3bd30bea01492f431d79f0))
+* remove projectdavid_common dependency from pyproject.toml ([8550789](https://github.com/project-david-ai/projectdavid-orm/commit/85507896809a78ff44b0ca07258c3a727d7a2819))
+* standardize timestamp columns, add soft-delete logic, and improve comments in models ([b9859c7](https://github.com/project-david-ai/projectdavid-orm/commit/b9859c74802dde63945d22485db9b426f447c971))
+* update model imports and clean up column definitions in models ([5cc9fff](https://github.com/project-david-ai/projectdavid-orm/commit/5cc9fff84411a36e486742a6736934d41191ade6))
+
 ## [1.1.10](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.9...v1.1.10) (2026-03-20)
 
 
