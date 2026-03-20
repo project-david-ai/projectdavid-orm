@@ -763,6 +763,7 @@ class VectorStoreFile(Base):
 # Training API Models
 # ---------------------------------------------------------------------------
 
+
 class Dataset(Base):
     __tablename__ = "datasets"
 
@@ -816,7 +817,7 @@ class Dataset(Base):
         BigInteger,
         default=lambda: int(time.time()),
         onupdate=lambda: int(time.time()),  # Fixed: Added auto-update
-        nullable=False
+        nullable=False,
     )
     deleted_at = Column(
         Integer,  # Standardized to Integer for soft-delete logic
@@ -972,7 +973,7 @@ class FineTunedModel(Base):
         BigInteger,
         default=lambda: int(time.time()),
         onupdate=lambda: int(time.time()),  # Fixed: Added auto-update
-        nullable=False
+        nullable=False,
     )
     deleted_at = Column(
         Integer,
