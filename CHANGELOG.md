@@ -1,3 +1,11 @@
+## [1.1.10](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.9...v1.1.10) (2026-03-20)
+
+
+### Bug Fixes
+
+* standardize timestamp columns, add soft-delete logic, and improve comments in models ([0aa5983](https://github.com/project-david-ai/projectdavid-orm/commit/0aa59836c1f37c5ee70a90cea269bfa2a2a8fb1f))
+* standardize timestamp columns, add soft-delete logic, and improve comments in models ([d28dbc2](https://github.com/project-david-ai/projectdavid-orm/commit/d28dbc28a8413a67790f46627b0f35b2e828427c))
+
 ## [1.1.9](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.8...v1.1.9) (2026-03-19)
 
 
