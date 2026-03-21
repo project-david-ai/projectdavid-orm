@@ -1,3 +1,48 @@
+## [1.1.10](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.9...v1.1.10) (2026-03-20)
+
+
+### Bug Fixes
+
+* standardize timestamp columns, add soft-delete logic, and improve comments in models ([0aa5983](https://github.com/project-david-ai/projectdavid-orm/commit/0aa59836c1f37c5ee70a90cea269bfa2a2a8fb1f))
+* standardize timestamp columns, add soft-delete logic, and improve comments in models ([d28dbc2](https://github.com/project-david-ai/projectdavid-orm/commit/d28dbc28a8413a67790f46627b0f35b2e828427c))
+
+## [1.1.9](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.8...v1.1.9) (2026-03-19)
+
+
+### Bug Fixes
+
+* add updated_at column to TrainingJobs table. ([bf438d8](https://github.com/project-david-ai/projectdavid-orm/commit/bf438d8856af88a03d41dab3b7cf4d5bd56ce339))
+* remove projectdavid_common dependency from pyproject.toml ([6537c42](https://github.com/project-david-ai/projectdavid-orm/commit/6537c42a1a7437c19a601fd154e655739c8f005b))
+
+## [1.1.8](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.7...v1.1.8) (2026-03-19)
+
+
+### Bug Fixes
+
+* remove projectdavid_common dependency from pyproject.toml ([8f6faa1](https://github.com/project-david-ai/projectdavid-orm/commit/8f6faa1d494a864998e31aa073308c13c65889cf))
+
+## [1.1.7](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.6...v1.1.7) (2026-03-19)
+
+
+### Bug Fixes
+
+* remove projectdavid_common dependency from pyproject.toml ([15fe2f7](https://github.com/project-david-ai/projectdavid-orm/commit/15fe2f79d6d2ac6ed5fdc59f71a8df891727aeb0))
+
+## [1.1.6](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.5...v1.1.6) (2026-03-19)
+
+
+### Bug Fixes
+
+* remove redundant newline in README.md instructions ([81a423f](https://github.com/project-david-ai/projectdavid-orm/commit/81a423fb14dc4d46640b3a8d6b5748ddb794f720))
+* upgrade projectdavid_common to v0.53.0 and remove redundant comments in models.py ([ac95695](https://github.com/project-david-ai/projectdavid-orm/commit/ac9569594868bbcbcefe5987195518482fad962b))
+
+## [1.1.5](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.4...v1.1.5) (2026-03-18)
+
+
+### Bug Fixes
+
+* streamline test_tag_release workflow by removing `dev` branch logic and updating PyPI token configuration ([89a1be2](https://github.com/project-david-ai/projectdavid-orm/commit/89a1be2b410a1ce275f36e224fa407a4be4a1a26))
+
 ## [1.1.4](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.3...v1.1.4) (2026-03-18)
 
 
