@@ -759,17 +759,17 @@ class VectorStoreFile(Base):
     vector_store = relationship("VectorStore", back_populates="files")
 
 
-# ... existing imports ...
-
 # ---------------------------------------------------------------------------
 # Training API Models
 # ---------------------------------------------------------------------------
 
+
 class Dataset(Base):
     __tablename__ = "datasets"
     id = Column(String(64), primary_key=True, index=True)
-    user_id = Column(String(64), ForeignKey("users.id", ondelete="CASCADE"), nullable=False,
-                     index=True)
+    user_id = Column(
+        String(64), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+    )
     name = Column(String(128), nullable=False)
     description = Column(Text, nullable=True)
     format = Column(String(32), nullable=False)
@@ -781,8 +781,12 @@ class Dataset(Base):
     status = Column(SAEnum(StatusEnum), nullable=False, default=StatusEnum.pending)
 
     created_at = Column(BigInteger, default=lambda: int(time.time()), nullable=False)
-    updated_at = Column(BigInteger, default=lambda: int(time.time()),
-                        onupdate=lambda: int(time.time()), nullable=False)
+    updated_at = Column(
+        BigInteger,
+        default=lambda: int(time.time()),
+        onupdate=lambda: int(time.time()),
+        nullable=False,
+    )
     deleted_at = Column(Integer, nullable=True, default=None, index=True)
 
     training_jobs = relationship("TrainingJob", back_populates="dataset", lazy="dynamic")
@@ -791,18 +795,24 @@ class Dataset(Base):
 class TrainingJob(Base):
     __tablename__ = "training_jobs"
     id = Column(String(64), primary_key=True, index=True)
-    user_id = Column(String(64), ForeignKey("users.id", ondelete="CASCADE"), nullable=False,
-                     index=True)
-    dataset_id = Column(String(64), ForeignKey("datasets.id", ondelete="SET NULL"), nullable=True,
-                        index=True)
+    user_id = Column(
+        String(64), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    dataset_id = Column(
+        String(64), ForeignKey("datasets.id", ondelete="SET NULL"), nullable=True, index=True
+    )
     base_model = Column(String(256), nullable=False)
     framework = Column(String(32), nullable=False, default="axolotl")
     config = Column(JSON, nullable=True)
     status = Column(SAEnum(StatusEnum), nullable=False, default=StatusEnum.queued)
 
     created_at = Column(BigInteger, default=lambda: int(time.time()), nullable=False)
-    updated_at = Column(BigInteger, default=lambda: int(time.time()),
-                        onupdate=lambda: int(time.time()), nullable=False)
+    updated_at = Column(
+        BigInteger,
+        default=lambda: int(time.time()),
+        onupdate=lambda: int(time.time()),
+        nullable=False,
+    )
     deleted_at = Column(Integer, nullable=True, default=None, index=True)
 
     started_at = Column(BigInteger, nullable=True)
@@ -816,8 +826,9 @@ class TrainingJob(Base):
     node_id = Column(String(64), ForeignKey("compute_nodes.id", ondelete="SET NULL"), nullable=True)
 
     dataset = relationship("Dataset", back_populates="training_jobs", lazy="select")
-    fine_tuned_model = relationship("FineTunedModel", back_populates="training_job", uselist=False,
-                                    lazy="select")
+    fine_tuned_model = relationship(
+        "FineTunedModel", back_populates="training_job", uselist=False, lazy="select"
+    )
     node = relationship("ComputeNode", back_populates="training_jobs")
 
     __table_args__ = (
@@ -829,10 +840,12 @@ class TrainingJob(Base):
 class FineTunedModel(Base):
     __tablename__ = "fine_tuned_models"
     id = Column(String(64), primary_key=True, index=True)
-    user_id = Column(String(64), ForeignKey("users.id", ondelete="CASCADE"), nullable=False,
-                     index=True)
-    training_job_id = Column(String(64), ForeignKey("training_jobs.id", ondelete="SET NULL"),
-                             nullable=True, index=True)
+    user_id = Column(
+        String(64), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    training_job_id = Column(
+        String(64), ForeignKey("training_jobs.id", ondelete="SET NULL"), nullable=True, index=True
+    )
     name = Column(String(128), nullable=False)
     description = Column(Text, nullable=True)
     base_model = Column(String(256), nullable=False)
@@ -843,8 +856,12 @@ class FineTunedModel(Base):
     status = Column(SAEnum(StatusEnum), nullable=False, default=StatusEnum.processing)
 
     created_at = Column(BigInteger, default=lambda: int(time.time()), nullable=False)
-    updated_at = Column(BigInteger, default=lambda: int(time.time()),
-                        onupdate=lambda: int(time.time()), nullable=False)
+    updated_at = Column(
+        BigInteger,
+        default=lambda: int(time.time()),
+        onupdate=lambda: int(time.time()),
+        nullable=False,
+    )
     deleted_at = Column(Integer, nullable=True, default=None, index=True)
 
     # NEW: Link to Cluster (Last known serving node)
@@ -857,6 +874,7 @@ class FineTunedModel(Base):
 # ---------------------------------------------------------------------------
 # Cluster & Resource Management
 # ---------------------------------------------------------------------------
+
 
 class ComputeNode(Base):
     __tablename__ = "compute_nodes"
@@ -882,8 +900,9 @@ class GPUAllocation(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     node_id = Column(String(64), ForeignKey("compute_nodes.id", ondelete="CASCADE"))
     job_id = Column(String(64), ForeignKey("training_jobs.id", ondelete="CASCADE"), nullable=True)
-    model_id = Column(String(64), ForeignKey("fine_tuned_models.id", ondelete="CASCADE"),
-                      nullable=True)
+    model_id = Column(
+        String(64), ForeignKey("fine_tuned_models.id", ondelete="CASCADE"), nullable=True
+    )
 
     vram_reserved_gb = Column(Float, nullable=False)
     created_at = Column(BigInteger, default=lambda: int(time.time()))
@@ -894,6 +913,7 @@ class GPUAllocation(Base):
 # ---------------------------------------------------------------------------
 # Model Catalog & Live Deployments
 # ---------------------------------------------------------------------------
+
 
 class BaseModel(Base):
     __tablename__ = "base_models"
@@ -922,6 +942,4 @@ class InferenceDeployment(Base):
     fine_tuned_model = relationship("FineTunedModel")
 
     # FIX: Ensure a node cannot use the same port twice
-    __table_args__ = (
-        UniqueConstraint("node_id", "port", name="uq_node_port_deployment"),
-    )
+    __table_args__ = (UniqueConstraint("node_id", "port", name="uq_node_port_deployment"),)
