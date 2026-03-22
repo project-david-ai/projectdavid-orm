@@ -929,9 +929,9 @@ class InferenceDeployment(Base):
     __tablename__ = "inference_deployments"
     id = Column(String(64), primary_key=True, index=True)
     node_id = Column(String(64), ForeignKey("compute_nodes.id"))
+    internal_hostname = Column(String(128), nullable=True)  # ← ADD THIS
     base_model_id = Column(String(128), ForeignKey("base_models.id"))
     fine_tuned_model_id = Column(String(64), ForeignKey("fine_tuned_models.id"), nullable=True)
-
     port = Column(Integer, default=8000)
     status = Column(SAEnum(StatusEnum), default=StatusEnum.active)
     current_throughput = Column(Float, default=0.0)
@@ -941,5 +941,4 @@ class InferenceDeployment(Base):
     base_model = relationship("BaseModel")
     fine_tuned_model = relationship("FineTunedModel")
 
-    # FIX: Ensure a node cannot use the same port twice
     __table_args__ = (UniqueConstraint("node_id", "port", name="uq_node_port_deployment"),)
