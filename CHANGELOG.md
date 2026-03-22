@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.12...v1.2.0) (2026-03-22)
+
+
+### Features
+
+* add internal_hostname to  InferenceDeployment ([20aa5d2](https://github.com/project-david-ai/projectdavid-orm/commit/20aa5d23fae57e510b63bcb59b24ff0c1544be9b))
+
 ## [1.1.12](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.11...v1.1.12) (2026-03-21)
 
 
