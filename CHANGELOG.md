@@ -1,3 +1,14 @@
+## [1.1.12](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.11...v1.1.12) (2026-03-21)
+
+
+### Bug Fixes
+
+* clean up column formatting and relationships in models for improved readability and consistency ([fb5a873](https://github.com/project-david-ai/projectdavid-orm/commit/fb5a8736c6d3fa726c806e6bba7de06f00f234e4))
+* clean up column formatting and relationships in models for improved readability and consistency ([fb5e05f](https://github.com/project-david-ai/projectdavid-orm/commit/fb5e05f5b0c94d05f1ce4b32ce46b61f8f33f96d))
+* clean up column formatting and relationships in models for improved readability and consistency ([bca098e](https://github.com/project-david-ai/projectdavid-orm/commit/bca098e76a04011bff6a3d719100d76dbbc650b9))
+* standardize timestamp columns, add soft-delete logic, and improve comments in models ([480baa1](https://github.com/project-david-ai/projectdavid-orm/commit/480baa17f1f34b575d3e6ba921ba6df9be3ac13b))
+* standardize timestamp columns, add soft-delete logic, and improve comments in models ([568c93d](https://github.com/project-david-ai/projectdavid-orm/commit/568c93dc8523c159ebc0c67f5a6b909cc2fe6352))
+
 ## [1.1.11](https://github.com/project-david-ai/projectdavid-orm/compare/v1.1.10...v1.1.11) (2026-03-20)
 
 
