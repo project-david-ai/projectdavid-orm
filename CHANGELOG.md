@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.3.0...v1.4.0) (2026-03-23)
+
+
+### Features
+
+* Phase 5a ([7213c69](https://github.com/project-david-ai/projectdavid-orm/commit/7213c698beb56eddb5230bbcf609f250e6b20c5e))
+
 # [1.3.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.2.0...v1.3.0) (2026-03-23)
 
 
