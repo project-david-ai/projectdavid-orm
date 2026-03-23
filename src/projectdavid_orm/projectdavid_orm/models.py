@@ -821,7 +821,8 @@ class TrainingJob(Base):
     output_path = Column(String(512), nullable=True)
 
     # Phase 4: node_id stores the Ray node ID (hex string) for traceability.
-    # FK to compute_nodes retained for legacy compatibility — dropped in Phase 5.
+    # FK to compute_nodes retained for legacy compatibility — will be dropped
+    # in Phase 5 when compute_nodes table is removed entirely.
     node_id = Column(String(64), ForeignKey("compute_nodes.id", ondelete="SET NULL"), nullable=True)
 
     dataset = relationship("Dataset", back_populates="training_jobs", lazy="select")
@@ -880,8 +881,8 @@ class ComputeNode(Base):
     """
     Phase 4 status: LEGACY.
     Node registration and heartbeat are now handled by Ray natively.
-    Retained for FK compatibility with TrainingJob and FineTunedModel.
-    Will be dropped in Phase 5 cleanup.
+    This table is retained for FK compatibility with TrainingJob and
+    FineTunedModel. Will be dropped in Phase 5 cleanup.
     """
 
     __tablename__ = "compute_nodes"
@@ -897,13 +898,15 @@ class ComputeNode(Base):
     allocations = relationship("GPUAllocation", back_populates="node", cascade="all, delete-orphan")
     training_jobs = relationship("TrainingJob", back_populates="node")
     active_models = relationship("FineTunedModel", back_populates="node")
+    # Phase 4: InferenceDeployment no longer has a FK back to compute_nodes
+    # so the deployments relationship is removed from this side too.
 
 
 class GPUAllocation(Base):
     """
     Phase 4 status: LEGACY.
     VRAM reservation is now handled by Ray resource scheduling.
-    Retained for schema compatibility. Will be dropped in Phase 5.
+    Table retained for schema compatibility. Will be dropped in Phase 5.
     """
 
     __tablename__ = "gpu_allocations"
@@ -938,7 +941,9 @@ class InferenceDeployment(Base):
     __tablename__ = "inference_deployments"
     id = Column(String(64), primary_key=True, index=True)
 
-    # Phase 4: plain string storing the Ray node ID (hex). No FK constraint.
+    # Phase 4: node_id is now a plain string storing the Ray node ID (hex).
+    # FK to compute_nodes and uq_node_port_deployment unique constraint have
+    # been dropped from the DB — this column is no longer constrained.
     node_id = Column(String(128), nullable=True)
 
     internal_hostname = Column(String(128), nullable=True)
@@ -949,10 +954,6 @@ class InferenceDeployment(Base):
     current_throughput = Column(Float, default=0.0)
     last_seen = Column(BigInteger, default=lambda: int(time.time()))
 
-    # Inference sharding: number of GPUs this deployment spans.
-    # 1 = single GPU (default, backward compatible).
-    # N > 1 = tensor parallel across N GPUs via vLLM --tensor-parallel-size.
-    tensor_parallel_size = Column(Integer, nullable=False, default=1)
-
+    # Phase 4: node relationship removed — node_id is no longer a FK.
     base_model = relationship("BaseModel")
     fine_tuned_model = relationship("FineTunedModel")
