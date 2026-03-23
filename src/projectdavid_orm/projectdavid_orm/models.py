@@ -762,8 +762,6 @@ class VectorStoreFile(Base):
 # ---------------------------------------------------------------------------
 # Training API Models
 # ---------------------------------------------------------------------------
-
-
 class Dataset(Base):
     __tablename__ = "datasets"
     id = Column(String(64), primary_key=True, index=True)
@@ -822,7 +820,9 @@ class TrainingJob(Base):
     metrics = Column(JSON, nullable=True)
     output_path = Column(String(512), nullable=True)
 
-    # NEW: Link to Cluster
+    # Phase 4: node_id stores the Ray node ID (hex string) for traceability.
+    # FK to compute_nodes retained for legacy compatibility — will be dropped
+    # in Phase 5 when compute_nodes table is removed entirely.
     node_id = Column(String(64), ForeignKey("compute_nodes.id", ondelete="SET NULL"), nullable=True)
 
     dataset = relationship("Dataset", back_populates="training_jobs", lazy="select")
@@ -864,7 +864,8 @@ class FineTunedModel(Base):
     )
     deleted_at = Column(Integer, nullable=True, default=None, index=True)
 
-    # NEW: Link to Cluster (Last known serving node)
+    # Phase 4: stores Ray node ID for traceability. FK retained for legacy
+    # compatibility until Phase 5 drops compute_nodes.
     node_id = Column(String(64), ForeignKey("compute_nodes.id", ondelete="SET NULL"), nullable=True)
 
     training_job = relationship("TrainingJob", back_populates="fine_tuned_model", lazy="select")
@@ -872,30 +873,42 @@ class FineTunedModel(Base):
 
 
 # ---------------------------------------------------------------------------
-# Cluster & Resource Management
+# Cluster & Resource Management (Legacy — Phase 5 will drop these)
 # ---------------------------------------------------------------------------
 
 
 class ComputeNode(Base):
+    """
+    Phase 4 status: LEGACY.
+    Node registration and heartbeat are now handled by Ray natively.
+    This table is retained for FK compatibility with TrainingJob and
+    FineTunedModel. Will be dropped in Phase 5 cleanup.
+    """
+
     __tablename__ = "compute_nodes"
     id = Column(String(64), primary_key=True, index=True)
     hostname = Column(String(128), nullable=False)
     ip_address = Column(String(45), nullable=True)
-
     gpu_model = Column(String(128))
     total_vram_gb = Column(Float)
     current_vram_usage_gb = Column(Float, default=0.0)
     status = Column(SAEnum(StatusEnum), default=StatusEnum.active)
     last_heartbeat = Column(BigInteger, default=lambda: int(time.time()))
 
-    # Enhanced Relationships
     allocations = relationship("GPUAllocation", back_populates="node", cascade="all, delete-orphan")
     training_jobs = relationship("TrainingJob", back_populates="node")
     active_models = relationship("FineTunedModel", back_populates="node")
-    deployments = relationship("InferenceDeployment", back_populates="node")
+    # Phase 4: InferenceDeployment no longer has a FK back to compute_nodes
+    # so the deployments relationship is removed from this side too.
 
 
 class GPUAllocation(Base):
+    """
+    Phase 4 status: LEGACY.
+    VRAM reservation is now handled by Ray resource scheduling.
+    Table retained for schema compatibility. Will be dropped in Phase 5.
+    """
+
     __tablename__ = "gpu_allocations"
     id = Column(Integer, primary_key=True, autoincrement=True)
     node_id = Column(String(64), ForeignKey("compute_nodes.id", ondelete="CASCADE"))
@@ -903,7 +916,6 @@ class GPUAllocation(Base):
     model_id = Column(
         String(64), ForeignKey("fine_tuned_models.id", ondelete="CASCADE"), nullable=True
     )
-
     vram_reserved_gb = Column(Float, nullable=False)
     created_at = Column(BigInteger, default=lambda: int(time.time()))
 
@@ -928,8 +940,13 @@ class BaseModel(Base):
 class InferenceDeployment(Base):
     __tablename__ = "inference_deployments"
     id = Column(String(64), primary_key=True, index=True)
-    node_id = Column(String(64), ForeignKey("compute_nodes.id"))
-    internal_hostname = Column(String(128), nullable=True)  # ← ADD THIS
+
+    # Phase 4: node_id is now a plain string storing the Ray node ID (hex).
+    # FK to compute_nodes and uq_node_port_deployment unique constraint have
+    # been dropped from the DB — this column is no longer constrained.
+    node_id = Column(String(128), nullable=True)
+
+    internal_hostname = Column(String(128), nullable=True)
     base_model_id = Column(String(128), ForeignKey("base_models.id"))
     fine_tuned_model_id = Column(String(64), ForeignKey("fine_tuned_models.id"), nullable=True)
     port = Column(Integer, default=8000)
@@ -937,8 +954,6 @@ class InferenceDeployment(Base):
     current_throughput = Column(Float, default=0.0)
     last_seen = Column(BigInteger, default=lambda: int(time.time()))
 
-    node = relationship("ComputeNode", back_populates="deployments")
+    # Phase 4: node relationship removed — node_id is no longer a FK.
     base_model = relationship("BaseModel")
     fine_tuned_model = relationship("FineTunedModel")
-
-    __table_args__ = (UniqueConstraint("node_id", "port", name="uq_node_port_deployment"),)

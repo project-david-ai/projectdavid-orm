@@ -30,7 +30,7 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/frankie336/projectdavid-orm"
+Homepage = "https://github.com/project-david-ai/projectdavid-orm"
 
 [tool.setuptools]
 package-dir = { "" = "src" }
