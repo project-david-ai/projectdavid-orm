@@ -922,8 +922,6 @@ class GPUAllocation(Base):
 # ---------------------------------------------------------------------------
 # Model Catalog & Live Deployments
 # ---------------------------------------------------------------------------
-
-
 class BaseModel(Base):
     __tablename__ = "base_models"
     id = Column(String(128), primary_key=True, index=True)
@@ -932,6 +930,11 @@ class BaseModel(Base):
     parameter_count = Column(String(32))
     is_multimodal = Column(Boolean, default=False)
     created_at = Column(BigInteger, default=lambda: int(time.time()))
+    endpoint = Column(
+        String(256),
+        nullable=True,
+        comment="HuggingFace model path or custom inference endpoint identifier.",
+    )
 
 
 class InferenceDeployment(Base):
