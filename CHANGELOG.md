@@ -1,3 +1,12 @@
+# [1.5.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.4.0...v1.5.0) (2026-03-24)
+
+
+### Features
+
+* add nullable endpoint field to BaseModel ([a902d5b](https://github.com/project-david-ai/projectdavid-orm/commit/a902d5ba45852cfbb8f6cd31ebcfed3850fc2354))
+* Phase 4 ([fb58012](https://github.com/project-david-ai/projectdavid-orm/commit/fb580125b975369c3a3a089f177c31e74561c72e))
+* Phase 5a ([0ea00c5](https://github.com/project-david-ai/projectdavid-orm/commit/0ea00c5ccde65c4e9d191ed1239e0fe1d069c4d0))
+
 # [1.4.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.3.0...v1.4.0) (2026-03-23)
 
 
