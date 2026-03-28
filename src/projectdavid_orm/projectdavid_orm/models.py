@@ -8,13 +8,7 @@ from projectdavid_common import ValidationInterface
 from projectdavid_common.projectdavid_orm.base import Base
 from projectdavid_common.schemas.enums import StatusEnum
 from projectdavid_common.utilities.logging_service import LoggingUtility
-from sqlalchemy import (
-    JSON,
-    BigInteger,
-    Boolean,
-    Column,
-    DateTime,
-)
+from sqlalchemy import JSON, BigInteger, Boolean, Column, DateTime
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy import (
     Float,
@@ -116,7 +110,9 @@ class User(Base):
         comment="Internal unique identifier for the user (e.g., user_...)",
     )
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    updated_at = Column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
     is_admin = Column(
         Boolean,
         default=False,
@@ -141,7 +137,9 @@ class User(Base):
     full_name = Column(String(255), nullable=True, comment="User's full display name")
     given_name = Column(String(128), nullable=True, comment="First name")
     family_name = Column(String(128), nullable=True, comment="Last name")
-    picture_url = Column(Text, nullable=True, comment="URL to the user's profile picture")
+    picture_url = Column(
+        Text, nullable=True, comment="URL to the user's profile picture"
+    )
 
     oauth_provider = Column(
         String(50),
@@ -175,13 +173,17 @@ class User(Base):
         "Sandbox", back_populates="user", cascade="all, delete-orphan", lazy="select"
     )
     vector_stores = relationship("VectorStore", back_populates="user", lazy="select")
-    files = relationship("File", back_populates="user", cascade="all, delete-orphan", lazy="select")
+    files = relationship(
+        "File", back_populates="user", cascade="all, delete-orphan", lazy="select"
+    )
     runs = relationship("Run", back_populates="user", lazy="select")
 
     audit_logs = relationship("AuditLog", back_populates="user", lazy="dynamic")
 
     __table_args__ = (
-        UniqueConstraint("oauth_provider", "provider_user_id", name="uq_user_oauth_provider_id"),
+        UniqueConstraint(
+            "oauth_provider", "provider_user_id", name="uq_user_oauth_provider_id"
+        ),
         Index("idx_user_email", "email"),
         Index("idx_user_is_admin", "is_admin"),
     )
@@ -239,7 +241,9 @@ class Thread(Base):
     meta_data = Column(JSON, nullable=False, default={})
     object = Column(String(64), nullable=False)
     tool_resources = Column(JSON, nullable=False, default={})
-    participants = relationship("User", secondary=thread_participants, back_populates="threads")
+    participants = relationship(
+        "User", secondary=thread_participants, back_populates="threads"
+    )
 
     owner_id = Column(
         String(64),
@@ -626,68 +630,6 @@ class FileStorage(Base):
     __table_args__ = (Index("idx_file_storage_file_id", "file_id"),)
 
 
-class BatfishSnapshot(Base):
-    __tablename__ = "batfish_snapshots"
-
-    id = Column(
-        String(64),
-        primary_key=True,
-        index=True,
-        comment="Opaque snapshot ID returned to caller e.g. snap_abc123",
-    )
-
-    snapshot_name = Column(
-        String(128),
-        nullable=False,
-        comment="Caller-supplied label e.g. 'incident_001'",
-    )
-
-    snapshot_key = Column(
-        String(256),
-        nullable=False,
-        unique=True,
-        index=True,
-        comment="Namespaced isolation key: {user_id}_{id}",
-    )
-
-    user_id = Column(
-        String(64),
-        ForeignKey("users.id", ondelete="CASCADE"),
-        nullable=False,
-        index=True,
-    )
-
-    configs_root = Column(String(512), nullable=True)
-
-    device_count = Column(Integer, default=0, nullable=False)
-    devices = Column(
-        JSON,
-        default=list,
-        nullable=False,
-        comment="List of hostnames ingested into this snapshot",
-    )
-
-    status = Column(
-        SAEnum(StatusEnum),
-        nullable=False,
-        default=StatusEnum.pending,
-    )
-
-    error_message = Column(Text, nullable=True)
-
-    created_at = Column(BigInteger, default=lambda: int(time.time()), nullable=False)
-    updated_at = Column(BigInteger, default=lambda: int(time.time()), nullable=False)
-    last_ingested_at = Column(BigInteger, nullable=True)
-
-    user = relationship("User", lazy="select")
-
-    __table_args__ = (
-        UniqueConstraint("user_id", "snapshot_name", name="uq_batfish_user_snapshot_name"),
-        Index("idx_batfish_user_id", "user_id"),
-        Index("idx_batfish_status", "status"),
-    )
-
-
 class VectorStore(Base):
     __tablename__ = "vector_stores"
     id = Column(String(64), primary_key=True, index=True)
@@ -749,7 +691,10 @@ class Dataset(Base):
     __tablename__ = "datasets"
     id = Column(String(64), primary_key=True, index=True)
     user_id = Column(
-        String(64), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+        String(64),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
     )
     name = Column(String(128), nullable=False)
     description = Column(Text, nullable=True)
@@ -770,17 +715,25 @@ class Dataset(Base):
     )
     deleted_at = Column(Integer, nullable=True, default=None, index=True)
 
-    training_jobs = relationship("TrainingJob", back_populates="dataset", lazy="dynamic")
+    training_jobs = relationship(
+        "TrainingJob", back_populates="dataset", lazy="dynamic"
+    )
 
 
 class TrainingJob(Base):
     __tablename__ = "training_jobs"
     id = Column(String(64), primary_key=True, index=True)
     user_id = Column(
-        String(64), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+        String(64),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
     )
     dataset_id = Column(
-        String(64), ForeignKey("datasets.id", ondelete="SET NULL"), nullable=True, index=True
+        String(64),
+        ForeignKey("datasets.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
     )
     base_model = Column(String(256), nullable=False)
     framework = Column(String(32), nullable=False, default="axolotl")
@@ -803,7 +756,9 @@ class TrainingJob(Base):
     metrics = Column(JSON, nullable=True)
     output_path = Column(String(512), nullable=True)
 
-    node_id = Column(String(64), ForeignKey("compute_nodes.id", ondelete="SET NULL"), nullable=True)
+    node_id = Column(
+        String(64), ForeignKey("compute_nodes.id", ondelete="SET NULL"), nullable=True
+    )
 
     dataset = relationship("Dataset", back_populates="training_jobs", lazy="select")
     fine_tuned_model = relationship(
@@ -821,10 +776,16 @@ class FineTunedModel(Base):
     __tablename__ = "fine_tuned_models"
     id = Column(String(64), primary_key=True, index=True)
     user_id = Column(
-        String(64), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+        String(64),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
     )
     training_job_id = Column(
-        String(64), ForeignKey("training_jobs.id", ondelete="SET NULL"), nullable=True, index=True
+        String(64),
+        ForeignKey("training_jobs.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
     )
     name = Column(String(128), nullable=False)
     description = Column(Text, nullable=True)
@@ -844,9 +805,13 @@ class FineTunedModel(Base):
     )
     deleted_at = Column(Integer, nullable=True, default=None, index=True)
 
-    node_id = Column(String(64), ForeignKey("compute_nodes.id", ondelete="SET NULL"), nullable=True)
+    node_id = Column(
+        String(64), ForeignKey("compute_nodes.id", ondelete="SET NULL"), nullable=True
+    )
 
-    training_job = relationship("TrainingJob", back_populates="fine_tuned_model", lazy="select")
+    training_job = relationship(
+        "TrainingJob", back_populates="fine_tuned_model", lazy="select"
+    )
     node = relationship("ComputeNode", back_populates="active_models")
 
 
@@ -873,7 +838,9 @@ class ComputeNode(Base):
     status = Column(SAEnum(StatusEnum), default=StatusEnum.active)
     last_heartbeat = Column(BigInteger, default=lambda: int(time.time()))
 
-    allocations = relationship("GPUAllocation", back_populates="node", cascade="all, delete-orphan")
+    allocations = relationship(
+        "GPUAllocation", back_populates="node", cascade="all, delete-orphan"
+    )
     training_jobs = relationship("TrainingJob", back_populates="node")
     active_models = relationship("FineTunedModel", back_populates="node")
 
@@ -884,12 +851,17 @@ class GPUAllocation(Base):
     VRAM reservation is now handled by Ray resource scheduling.
     Retained for schema compatibility. Will be dropped in Phase 5.
     """
+
     __tablename__ = "gpu_allocations"
     id = Column(Integer, primary_key=True, autoincrement=True)
     node_id = Column(String(64), ForeignKey("compute_nodes.id", ondelete="CASCADE"))
-    job_id = Column(String(64), ForeignKey("training_jobs.id", ondelete="CASCADE"), nullable=True)
+    job_id = Column(
+        String(64), ForeignKey("training_jobs.id", ondelete="CASCADE"), nullable=True
+    )
     model_id = Column(
-        String(64), ForeignKey("fine_tuned_models.id", ondelete="CASCADE"), nullable=True
+        String(64),
+        ForeignKey("fine_tuned_models.id", ondelete="CASCADE"),
+        nullable=True,
     )
     vram_reserved_gb = Column(Float, nullable=False)
     created_at = Column(BigInteger, default=lambda: int(time.time()))
@@ -923,7 +895,9 @@ class InferenceDeployment(Base):
 
     internal_hostname = Column(String(128), nullable=True)
     base_model_id = Column(String(128), ForeignKey("base_models.id"))
-    fine_tuned_model_id = Column(String(64), ForeignKey("fine_tuned_models.id"), nullable=True)
+    fine_tuned_model_id = Column(
+        String(64), ForeignKey("fine_tuned_models.id"), nullable=True
+    )
     port = Column(Integer, default=8000)
     status = Column(SAEnum(StatusEnum), default=StatusEnum.active)
     current_throughput = Column(Float, default=0.0)

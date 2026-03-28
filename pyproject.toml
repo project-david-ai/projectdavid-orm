@@ -24,10 +24,11 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
   "pytest",
-  "black",
-  "isort",
-  "bandit",
-  "mypy",
+  "black==24.1.1",
+  "isort==5.13.2",
+  "bandit==1.7.7",
+  "mypy>=1.0",
+  "pre-commit",
 ]
 
 [project.urls]
@@ -43,14 +44,21 @@ where = ["src"]
 include = ["projectdavid_orm", "projectdavid_orm.*"]
 
 [tool.black]
-line-length = 100
-target-version = ["py310"]
-skip-string-normalization = true
+line-length = 88
+target-version = ["py310", "py311", "py312"]
 
 [tool.flake8]
-max-line-length = 200
+max-line-length = 88
 extend-ignore = ["E203"]
 exclude = [".venv", ".git", "__pycache__", "build", "dist"]
 
 [tool.isort]
 profile = "black"
+line_length = 88
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = false
+warn_unused_configs = true
+ignore_missing_imports = true
+exclude = ["tests/"]
