@@ -8,9 +8,9 @@ version = "1.1.10"
 description = "Shared SQLAlchemy ORM models for ProjectDavid services"
 readme = "README.md"
 authors = [
-  { name = "Francis N.", email = "francis.neequaye@projectdavid.co.uk" }
+  { name = "Francis N.", email = "engineering@projectdavid.co.uk" }
 ]
-license = { text = "Polyform" }
+license = { text = "PolyForm Noncommercial License 1.0.0" }
 keywords = ["orm", "sqlalchemy", "models", "projectdavid", "internal"]
 requires-python = ">=3.10"
 
@@ -19,18 +19,21 @@ dependencies = [
   "pymysql",
   "pydantic>=2.0",
   "python-dotenv",
-
 ]
 
 [project.optional-dependencies]
 dev = [
   "pytest",
   "black",
-  "isort"
+  "isort",
+  "bandit",
+  "mypy",
 ]
 
 [project.urls]
 Homepage = "https://github.com/project-david-ai/projectdavid-orm"
+Documentation = "https://docs.projectdavid.co.uk/docs"
+Changelog = "https://github.com/project-david-ai/projectdavid-orm/blob/main/CHANGELOG.md"
 
 [tool.setuptools]
 package-dir = { "" = "src" }
