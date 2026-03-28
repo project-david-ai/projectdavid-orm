@@ -8,13 +8,7 @@ from projectdavid_common import ValidationInterface
 from projectdavid_common.projectdavid_orm.base import Base
 from projectdavid_common.schemas.enums import StatusEnum
 from projectdavid_common.utilities.logging_service import LoggingUtility
-from sqlalchemy import (
-    JSON,
-    BigInteger,
-    Boolean,
-    Column,
-    DateTime,
-)
+from sqlalchemy import JSON, BigInteger, Boolean, Column, DateTime
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy import (
     Float,
@@ -116,7 +110,9 @@ class User(Base):
         comment="Internal unique identifier for the user (e.g., user_...)",
     )
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    updated_at = Column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
     is_admin = Column(
         Boolean,
         default=False,
@@ -141,7 +137,9 @@ class User(Base):
     full_name = Column(String(255), nullable=True, comment="User's full display name")
     given_name = Column(String(128), nullable=True, comment="First name")
     family_name = Column(String(128), nullable=True, comment="Last name")
-    picture_url = Column(Text, nullable=True, comment="URL to the user's profile picture")
+    picture_url = Column(
+        Text, nullable=True, comment="URL to the user's profile picture"
+    )
 
     oauth_provider = Column(
         String(50),
@@ -175,13 +173,17 @@ class User(Base):
         "Sandbox", back_populates="user", cascade="all, delete-orphan", lazy="select"
     )
     vector_stores = relationship("VectorStore", back_populates="user", lazy="select")
-    files = relationship("File", back_populates="user", cascade="all, delete-orphan", lazy="select")
+    files = relationship(
+        "File", back_populates="user", cascade="all, delete-orphan", lazy="select"
+    )
     runs = relationship("Run", back_populates="user", lazy="select")
 
     audit_logs = relationship("AuditLog", back_populates="user", lazy="dynamic")
 
     __table_args__ = (
-        UniqueConstraint("oauth_provider", "provider_user_id", name="uq_user_oauth_provider_id"),
+        UniqueConstraint(
+            "oauth_provider", "provider_user_id", name="uq_user_oauth_provider_id"
+        ),
         Index("idx_user_email", "email"),
         Index("idx_user_is_admin", "is_admin"),
     )
@@ -203,8 +205,6 @@ class AuditLog(Base):
 
     id = Column(BigInteger, primary_key=True, index=True, autoincrement=True)
 
-    # Who performed the action.
-    # Nullable: SET NULL when the user is erased (record survives, identity is anonymised).
     user_id = Column(
         String(64),
         ForeignKey("users.id", ondelete="SET NULL"),
@@ -212,7 +212,6 @@ class AuditLog(Base):
         index=True,
     )
 
-    # What was done
     action = Column(
         String(32),
         nullable=False,
@@ -220,22 +219,18 @@ class AuditLog(Base):
         comment="e.g. CREATE, UPDATE, DELETE, HARD_DELETE, ERASE",
     )
 
-    # What entity was affected
     entity_type = Column(
         String(64), nullable=False, index=True, comment="e.g. Assistant, User, Thread"
     )
     entity_id = Column(String(64), nullable=False, index=True)
 
-    # Context
     timestamp = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
     ip_address = Column(String(45), nullable=True)
 
-    # Detailed Payload (snapshot of changes)
     details = Column(
         JSON, nullable=True, comment="Stores before/after state or reasoning for action"
     )
 
-    # Relationship
     user = relationship("User", back_populates="audit_logs")
 
 
@@ -246,10 +241,10 @@ class Thread(Base):
     meta_data = Column(JSON, nullable=False, default={})
     object = Column(String(64), nullable=False)
     tool_resources = Column(JSON, nullable=False, default={})
-    participants = relationship("User", secondary=thread_participants, back_populates="threads")
+    participants = relationship(
+        "User", secondary=thread_participants, back_populates="threads"
+    )
 
-    # SET NULL on user deletion — thread record is preserved, ownership is cleared.
-    # Application-level erase_user() handles physical cleanup of thread content.
     owner_id = Column(
         String(64),
         ForeignKey("users.id", ondelete="SET NULL"),
@@ -267,7 +262,6 @@ class Message(Base):
     attachments = Column(JSON, default=[])
     completed_at = Column(Integer, nullable=True)
 
-    # --- The "Brain" Output ---
     content = Column(Text(length=4294967295), nullable=False)
     reasoning = Column(
         Text(length=4294967295),
@@ -275,7 +269,6 @@ class Message(Base):
         comment="Stores the internal 'thinking' or reasoning tokens from the model.",
     )
 
-    # --- Native Tool Metadata (Critical for Stage 2/Level 3) ---
     tool_calls = Column(
         JSON,
         nullable=True,
@@ -295,15 +288,10 @@ class Message(Base):
     role = Column(String(32), nullable=False)
     run_id = Column(String(64), nullable=True)
 
-    # Kept as simple String, no longer linked to deleted Tool table
     tool_id = Column(String(64), nullable=True)
 
     status = Column(String(32), nullable=True)
 
-    # NOTE: thread_id is intentionally stored as a plain string with no FK constraint.
-    # Orphaned messages (after thread deletion) are handled by:
-    #   a) application-level erase_user() during right-to-erasure
-    #   b) purge_orphaned_threads daemon (periodic background cleanup)
     thread_id = Column(String(64), nullable=False)
     sender_id = Column(String(64), nullable=True)
 
@@ -311,7 +299,6 @@ class Message(Base):
 class Run(Base):
     __tablename__ = "runs"
 
-    # CASCADE: runs are deleted when their owning user is erased.
     user_id = Column(
         String(64),
         ForeignKey("users.id", ondelete="CASCADE"),
@@ -323,7 +310,6 @@ class Run(Base):
     id = Column(String(64), primary_key=True)
     assistant_id = Column(String(64), nullable=False)
 
-    # timestamps as epoch seconds (ints)
     cancelled_at = Column(Integer, nullable=True)
     completed_at = Column(Integer, nullable=True)
     created_at = Column(Integer, default=lambda: int(time.time()))
@@ -348,13 +334,11 @@ class Run(Base):
 
     status = Column(SAEnum(validation.StatusEnum), nullable=False)
 
-    # NOTE: thread_id stored as plain string — no FK constraint (mirrors Message.thread_id).
     thread_id = Column(String(64), nullable=False)
     tool_choice = Column(String(64), nullable=True)
 
     tools = Column(JSON, nullable=True)
 
-    # --- Agentic Behavior State (Level 3) ---
     current_turn = Column(
         Integer,
         default=0,
@@ -382,8 +366,11 @@ class Run(Base):
     )
 
     usage = Column(JSON, nullable=True)
-    temperature = Column(Integer, nullable=True)
-    top_p = Column(Integer, nullable=True)
+
+    # Fixed: Float not Integer — supports values like 0.7, 0.95
+    temperature = Column(Float, nullable=True)
+    top_p = Column(Float, nullable=True)
+
     tool_resources = Column(JSON, nullable=True)
 
     actions = relationship("Action", back_populates="run")
@@ -403,9 +390,21 @@ class Assistant(Base):
 
     tool_configs = Column(JSON)
     meta_data = Column(JSON)
-    top_p = Column(Integer)
-    temperature = Column(Integer)
+
+    # Fixed: Float not Integer — supports values like 0.7, 0.95
+    top_p = Column(Float, nullable=True)
+    temperature = Column(Float, nullable=True)
+
     response_format = Column(String(64))
+
+    # Added: max_tokens — bubbles up to inference at runtime
+    max_tokens = Column(
+        Integer,
+        nullable=True,
+        default=2048,
+        server_default="2048",
+        comment="Maximum tokens to generate per inference pass. Overrides provider defaults at runtime.",
+    )
 
     tool_resources = Column(
         JSON,
@@ -413,9 +412,6 @@ class Assistant(Base):
         comment='Resource map keyed by tool type, e.g. {"file_search": {"vector_store_ids": ["vs_123","vs_456"]}}',
     )
 
-    # SET NULL on user deletion — assistant record is preserved (may be shared with
-    # other users via user_assistants). Application-level erase_user() decides
-    # whether to soft-delete exclusively-owned assistants.
     owner_id = Column(
         String(64),
         ForeignKey("users.id", ondelete="SET NULL"),
@@ -499,14 +495,12 @@ class Action(Base):
 
     id = Column(String(64), primary_key=True, index=True)
 
-    # CASCADE: actions are deleted when their parent run is deleted.
     run_id = Column(
         String(64),
         ForeignKey("runs.id", ondelete="CASCADE"),
         nullable=True,
     )
 
-    # --- Agentic Tracking (Level 3) ---
     tool_call_id = Column(
         String(64),
         nullable=True,
@@ -548,7 +542,6 @@ class Action(Base):
     function_args = Column(JSON, nullable=True)
     result = Column(JSON, nullable=True)
 
-    # --- Relationships ---
     run = relationship("Run", back_populates="actions")
 
     @staticmethod
@@ -560,7 +553,6 @@ class Sandbox(Base):
     __tablename__ = "sandboxes"
     id = Column(String(64), primary_key=True, index=True)
 
-    # CASCADE: sandboxes are deleted when their owning user is erased.
     user_id = Column(
         String(64),
         ForeignKey("users.id", ondelete="CASCADE"),
@@ -584,7 +576,6 @@ class File(Base):
     purpose = Column(String(64), nullable=False)
     mime_type = Column(String(255))
 
-    # ── GDPR / Lifecycle ────────────────────────────────────────────
     deleted_at = Column(
         Integer,
         nullable=True,
@@ -608,7 +599,6 @@ class FileStorage(Base):
     __tablename__ = "file_storage"
     id = Column(Integer, primary_key=True, autoincrement=True)
 
-    # CASCADE: storage records are deleted when their parent file is deleted.
     file_id = Column(
         String(64),
         ForeignKey("files.id", ondelete="CASCADE"),
@@ -640,69 +630,6 @@ class FileStorage(Base):
     __table_args__ = (Index("idx_file_storage_file_id", "file_id"),)
 
 
-class BatfishSnapshot(Base):
-    __tablename__ = "batfish_snapshots"
-
-    id = Column(
-        String(64),
-        primary_key=True,
-        index=True,
-        comment="Opaque snapshot ID returned to caller e.g. snap_abc123",
-    )
-
-    snapshot_name = Column(
-        String(128),
-        nullable=False,
-        comment="Caller-supplied label e.g. 'incident_001'",
-    )
-
-    snapshot_key = Column(
-        String(256),
-        nullable=False,
-        unique=True,
-        index=True,
-        comment="Namespaced isolation key: {user_id}_{id}",
-    )
-
-    # CASCADE: snapshots are deleted when their owning user is erased.
-    user_id = Column(
-        String(64),
-        ForeignKey("users.id", ondelete="CASCADE"),
-        nullable=False,
-        index=True,
-    )
-
-    configs_root = Column(String(512), nullable=True)
-
-    device_count = Column(Integer, default=0, nullable=False)
-    devices = Column(
-        JSON,
-        default=list,
-        nullable=False,
-        comment="List of hostnames ingested into this snapshot",
-    )
-
-    status = Column(
-        SAEnum(StatusEnum),
-        nullable=False,
-        default=StatusEnum.pending,
-    )
-
-    error_message = Column(Text, nullable=True)
-
-    created_at = Column(BigInteger, default=lambda: int(time.time()), nullable=False)
-    updated_at = Column(BigInteger, default=lambda: int(time.time()), nullable=False)
-    last_ingested_at = Column(BigInteger, nullable=True)
-
-    user = relationship("User", lazy="select")
-
-    __table_args__ = (
-        UniqueConstraint("user_id", "snapshot_name", name="uq_batfish_user_snapshot_name"),
-        Index("idx_batfish_user_id", "user_id"),
-        Index("idx_batfish_status", "status"),
-    )
-
-
 class VectorStore(Base):
     __tablename__ = "vector_stores"
     id = Column(String(64), primary_key=True, index=True)
@@ -722,7 +649,6 @@ class VectorStore(Base):
     config = Column(JSON, nullable=True)
     file_count = Column(Integer, default=0, nullable=False)
 
-    # ── GDPR / Lifecycle ────────────────────────────────────────────────────
     deleted_at = Column(
         Integer,
         nullable=True,
@@ -744,7 +670,6 @@ class VectorStoreFile(Base):
     __tablename__ = "vector_store_files"
     id = Column(String(64), primary_key=True, index=True)
 
-    # CASCADE: vector store files are deleted when their parent store is deleted.
     vector_store_id = Column(
         String(64),
         ForeignKey("vector_stores.id", ondelete="CASCADE"),
@@ -766,7 +691,10 @@ class Dataset(Base):
     __tablename__ = "datasets"
     id = Column(String(64), primary_key=True, index=True)
     user_id = Column(
-        String(64), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+        String(64),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
     )
     name = Column(String(128), nullable=False)
     description = Column(Text, nullable=True)
@@ -787,17 +715,25 @@ class Dataset(Base):
     )
     deleted_at = Column(Integer, nullable=True, default=None, index=True)
 
-    training_jobs = relationship("TrainingJob", back_populates="dataset", lazy="dynamic")
+    training_jobs = relationship(
+        "TrainingJob", back_populates="dataset", lazy="dynamic"
+    )
 
 
 class TrainingJob(Base):
     __tablename__ = "training_jobs"
     id = Column(String(64), primary_key=True, index=True)
     user_id = Column(
-        String(64), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+        String(64),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
     )
     dataset_id = Column(
-        String(64), ForeignKey("datasets.id", ondelete="SET NULL"), nullable=True, index=True
+        String(64),
+        ForeignKey("datasets.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
     )
     base_model = Column(String(256), nullable=False)
     framework = Column(String(32), nullable=False, default="axolotl")
@@ -820,9 +756,9 @@ class TrainingJob(Base):
     metrics = Column(JSON, nullable=True)
     output_path = Column(String(512), nullable=True)
 
-    # Phase 4: node_id stores the Ray node ID (hex string) for traceability.
-    # FK to compute_nodes retained for legacy compatibility — dropped in Phase 5.
-    node_id = Column(String(64), ForeignKey("compute_nodes.id", ondelete="SET NULL"), nullable=True)
+    node_id = Column(
+        String(64), ForeignKey("compute_nodes.id", ondelete="SET NULL"), nullable=True
+    )
 
     dataset = relationship("Dataset", back_populates="training_jobs", lazy="select")
     fine_tuned_model = relationship(
@@ -840,10 +776,16 @@ class FineTunedModel(Base):
     __tablename__ = "fine_tuned_models"
     id = Column(String(64), primary_key=True, index=True)
     user_id = Column(
-        String(64), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+        String(64),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
     )
     training_job_id = Column(
-        String(64), ForeignKey("training_jobs.id", ondelete="SET NULL"), nullable=True, index=True
+        String(64),
+        ForeignKey("training_jobs.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
     )
     name = Column(String(128), nullable=False)
     description = Column(Text, nullable=True)
@@ -863,11 +805,13 @@ class FineTunedModel(Base):
     )
     deleted_at = Column(Integer, nullable=True, default=None, index=True)
 
-    # Phase 4: stores Ray node ID for traceability. FK retained for legacy
-    # compatibility until Phase 5 drops compute_nodes.
-    node_id = Column(String(64), ForeignKey("compute_nodes.id", ondelete="SET NULL"), nullable=True)
+    node_id = Column(
+        String(64), ForeignKey("compute_nodes.id", ondelete="SET NULL"), nullable=True
+    )
 
-    training_job = relationship("TrainingJob", back_populates="fine_tuned_model", lazy="select")
+    training_job = relationship(
+        "TrainingJob", back_populates="fine_tuned_model", lazy="select"
+    )
     node = relationship("ComputeNode", back_populates="active_models")
 
 
@@ -894,7 +838,9 @@ class ComputeNode(Base):
     status = Column(SAEnum(StatusEnum), default=StatusEnum.active)
     last_heartbeat = Column(BigInteger, default=lambda: int(time.time()))
 
-    allocations = relationship("GPUAllocation", back_populates="node", cascade="all, delete-orphan")
+    allocations = relationship(
+        "GPUAllocation", back_populates="node", cascade="all, delete-orphan"
+    )
     training_jobs = relationship("TrainingJob", back_populates="node")
     active_models = relationship("FineTunedModel", back_populates="node")
 
@@ -909,9 +855,13 @@ class GPUAllocation(Base):
     __tablename__ = "gpu_allocations"
     id = Column(Integer, primary_key=True, autoincrement=True)
     node_id = Column(String(64), ForeignKey("compute_nodes.id", ondelete="CASCADE"))
-    job_id = Column(String(64), ForeignKey("training_jobs.id", ondelete="CASCADE"), nullable=True)
+    job_id = Column(
+        String(64), ForeignKey("training_jobs.id", ondelete="CASCADE"), nullable=True
+    )
     model_id = Column(
-        String(64), ForeignKey("fine_tuned_models.id", ondelete="CASCADE"), nullable=True
+        String(64),
+        ForeignKey("fine_tuned_models.id", ondelete="CASCADE"),
+        nullable=True,
     )
     vram_reserved_gb = Column(Float, nullable=False)
     created_at = Column(BigInteger, default=lambda: int(time.time()))
@@ -941,20 +891,18 @@ class InferenceDeployment(Base):
     __tablename__ = "inference_deployments"
     id = Column(String(64), primary_key=True, index=True)
 
-    # Phase 4: plain string storing the Ray node ID (hex). No FK constraint.
     node_id = Column(String(128), nullable=True)
 
     internal_hostname = Column(String(128), nullable=True)
     base_model_id = Column(String(128), ForeignKey("base_models.id"))
-    fine_tuned_model_id = Column(String(64), ForeignKey("fine_tuned_models.id"), nullable=True)
+    fine_tuned_model_id = Column(
+        String(64), ForeignKey("fine_tuned_models.id"), nullable=True
+    )
     port = Column(Integer, default=8000)
     status = Column(SAEnum(StatusEnum), default=StatusEnum.active)
     current_throughput = Column(Float, default=0.0)
     last_seen = Column(BigInteger, default=lambda: int(time.time()))
 
-    # Inference sharding: number of GPUs this deployment spans.
-    # 1 = single GPU (default, backward compatible).
-    # N > 1 = tensor parallel across N GPUs via vLLM --tensor-parallel-size.
     tensor_parallel_size = Column(Integer, nullable=False, default=1)
 
     base_model = relationship("BaseModel")
