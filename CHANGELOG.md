@@ -1,3 +1,24 @@
+# [1.5.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.4.0...v1.5.0) (2026-03-28)
+
+
+### Bug Fixes
+
+* correct semantic-release script path to update_version.py ([59af721](https://github.com/project-david-ai/projectdavid-orm/commit/59af721199849f06c89804df3b28d287e2aa47f6))
+
+
+### Features
+
+* add max_tokens to Assistant, fix temperature and top_p Integer to Float on Assistant and Run ([b990759](https://github.com/project-david-ai/projectdavid-orm/commit/b9907590bdf46c1d20f908faac7dcfe3ed70d404))
+* add nullable endpoint field to BaseModel ([a902d5b](https://github.com/project-david-ai/projectdavid-orm/commit/a902d5ba45852cfbb8f6cd31ebcfed3850fc2354))
+* add nullable endpoint field to BaseModel ([6f4aa94](https://github.com/project-david-ai/projectdavid-orm/commit/6f4aa949a7167cdce9311c8d9b03ecd16d373830))
+* max_tokens on Assistant, temperature/top_p Integer to Float, remove BatfishSnapshot, Gold Standard CI, PolyForm licence, COMMERCIAL.md, SECURITY.md, pre-commit, mypy ([edf837a](https://github.com/project-david-ai/projectdavid-orm/commit/edf837a7810ee744df011d81f56e5f761ba4135a))
+* max_tokens on Assistant, temperature/top_p Integer to Float, remove BatfishSnapshot, Gold Standard CI, PolyForm licence, COMMERCIAL.md, SECURITY.md, pre-commit, mypy ([f4165da](https://github.com/project-david-ai/projectdavid-orm/commit/f4165da7a1784b2e9e89b01384a2a9fb2d898b61))
+* max_tokens on Assistant, temperature/top_p Integer to Float, remove BatfishSnapshot, Gold Standard CI, PolyForm licence, COMMERCIAL.md, SECURITY.md, pre-commit, mypy ([ff4a08b](https://github.com/project-david-ai/projectdavid-orm/commit/ff4a08b6b92cb4355568cc299c2e6b51f248cd34))
+* Phase 4 ([fb58012](https://github.com/project-david-ai/projectdavid-orm/commit/fb580125b975369c3a3a089f177c31e74561c72e))
+* Phase 4 ([6c0c17c](https://github.com/project-david-ai/projectdavid-orm/commit/6c0c17cae3f4560b6dbed4621a4e6844a982d525))
+* Phase 5a ([0ea00c5](https://github.com/project-david-ai/projectdavid-orm/commit/0ea00c5ccde65c4e9d191ed1239e0fe1d069c4d0))
+* Phase 5a ([32cd97b](https://github.com/project-david-ai/projectdavid-orm/commit/32cd97b97e6fdff515318a61d902d3eb755447d8))
+
 # [1.4.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.3.0...v1.4.0) (2026-03-23)
 
 
