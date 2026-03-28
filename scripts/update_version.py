@@ -19,7 +19,9 @@ def update_version(file_path_str, new_version):
         version_pattern = r'(version\s*=\s*["\'])\d+\.\d+\.\d+(["\'])'
         replacement = rf"\g<1>{new_version}\g<2>"  # Use backreferences
 
-        new_content, num_replacements = re.subn(version_pattern, replacement, content, count=1)
+        new_content, num_replacements = re.subn(
+            version_pattern, replacement, content, count=1
+        )
 
         if num_replacements == 0:
             # Handle case where version might be missing or doesn't match expected semver format yet

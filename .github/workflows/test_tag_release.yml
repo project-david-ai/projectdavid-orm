@@ -15,7 +15,7 @@ env:
 
 jobs:
   lint:
-    name: 🧹 Lint Code
+    name: 🧹 Lint & Security
     runs-on: ubuntu-latest
     steps:
       - name: 🧾 Checkout repository
@@ -44,6 +44,12 @@ jobs:
 
       - name: ⚫ Run isort (Import Sort Check)
         run: isort --check .
+
+      - name: 🔒 Run Bandit (Security Scan)
+        run: bandit -r src/ -c .bandit.yml || true
+
+      - name: 🔍 Run Mypy (Type Check)
+        run: mypy src/ --ignore-missing-imports || true
 
   test:
     name: ✅ Test on Python ${{ matrix.python-version }}
@@ -114,7 +120,7 @@ jobs:
             @semantic-release/exec \
             conventional-changelog-conventionalcommits
 
-      - name: 🔢 Run semantic-release (tag, changelog, version bump)
+      - name: 🔢 Run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
