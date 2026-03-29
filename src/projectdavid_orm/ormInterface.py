@@ -34,8 +34,6 @@ class OrmInterface:
     File = File
     # FileStorage model
     FileStorage = FileStorage
-    # Batfish model
-    BatfishSnapshot = BatfishSnapshot
     # VectorStore model
     VectorStore = VectorStore
     # VectorStoreFile model
