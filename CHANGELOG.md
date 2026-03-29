@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.5.0...v1.6.0) (2026-03-29)
+
+
+### Features
+
+* publish v1.6.0 — skip duplicate v1.5.0 on PyPI ([636aaf6](https://github.com/project-david-ai/projectdavid-orm/commit/636aaf67a7cedfdd094d47229984074b1305b491))
+
 # [1.5.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.4.0...v1.5.0) (2026-03-29)
 
 
