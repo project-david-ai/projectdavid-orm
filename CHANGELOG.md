@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/project-david-ai/projectdavid-orm/compare/v1.6.0...v1.6.1) (2026-04-04)
+
+
+### Bug Fixes
+
+* **exports:** expose all ORM models via __all__ and top-level imports ([33ea05b](https://github.com/project-david-ai/projectdavid-orm/commit/33ea05b04e155039de958a43e21bc06c7fccf761))
+
 # [1.6.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.5.0...v1.6.0) (2026-03-29)
 
 
