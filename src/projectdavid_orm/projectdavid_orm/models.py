@@ -818,8 +818,6 @@ class FineTunedModel(Base):
 # ---------------------------------------------------------------------------
 # Cluster & Resource Management (Legacy — Phase 5 will drop these)
 # ---------------------------------------------------------------------------
-
-
 class ComputeNode(Base):
     """
     Phase 4 status: LEGACY.
