@@ -1,3 +1,10 @@
+## [1.6.3](https://github.com/project-david-ai/projectdavid-orm/compare/v1.6.2...v1.6.3) (2026-04-11)
+
+
+### Bug Fixes
+
+* **orm:** declare Base locally in models.py — remove dependency on projectdavid_common.projectdavid_orm.base ([0d43ad1](https://github.com/project-david-ai/projectdavid-orm/commit/0d43ad1984a72765d651b4080325cecbe35ca3ef))
+
 ## [1.6.2](https://github.com/project-david-ai/projectdavid-orm/compare/v1.6.1...v1.6.2) (2026-04-05)
 
 
