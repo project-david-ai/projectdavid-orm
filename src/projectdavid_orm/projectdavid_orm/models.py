@@ -1,11 +1,9 @@
 import secrets
 import time
 from datetime import datetime
-from enum import Enum as PyEnum
 
 from passlib.context import CryptContext
 from projectdavid_common import ValidationInterface
-from projectdavid_common.projectdavid_orm.base import Base
 from projectdavid_common.schemas.enums import StatusEnum
 from projectdavid_common.utilities.logging_service import LoggingUtility
 from sqlalchemy import JSON, BigInteger, Boolean, Column, DateTime
@@ -22,6 +20,8 @@ from sqlalchemy import (
 )
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm import joinedload, relationship
+
+from .base import Base
 
 logger = LoggingUtility()
 
