@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.6.3...v1.7.0) (2026-04-12)
+
+
+### Features
+
+* **inference_deployment:** add vLLM hyperparam columns ([6c6de67](https://github.com/project-david-ai/projectdavid-orm/commit/6c6de67eca69c7e71c9c3755765254fe1aeac25d))
+
 ## [1.6.3](https://github.com/project-david-ai/projectdavid-orm/compare/v1.6.2...v1.6.3) (2026-04-11)
 
 
