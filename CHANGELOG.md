@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.7.0...v1.8.0) (2026-04-12)
+
+
+### Features
+
+* **inference_deployment:** add mm_processor_kwargs column ([ae55b96](https://github.com/project-david-ai/projectdavid-orm/commit/ae55b96acf0696b27b27afa24d9ab515bb35481c))
+
 # [1.7.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.6.3...v1.7.0) (2026-04-12)
 
 
