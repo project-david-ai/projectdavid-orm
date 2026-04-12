@@ -886,22 +886,93 @@ class BaseModel(Base):
 
 
 class InferenceDeployment(Base):
+    """
+    Tracks a live vLLM deployment on Ray Serve.
+
+    Hyperparams stored here override environment-level defaults at deploy time.
+    The reconciler reads these fields and passes them directly to vLLM engine args.
+    None values fall back to the VLLM_DEFAULT_* env vars in inference_worker.py.
+    """
+
     __tablename__ = "inference_deployments"
+
+    # --- Identity ---
     id = Column(String(64), primary_key=True, index=True)
-
     node_id = Column(String(128), nullable=True)
-
     internal_hostname = Column(String(128), nullable=True)
+
+    # --- Foreign Keys ---
     base_model_id = Column(String(128), ForeignKey("base_models.id"))
     fine_tuned_model_id = Column(
         String(64), ForeignKey("fine_tuned_models.id"), nullable=True
     )
+
+    # --- Deployment State ---
     port = Column(Integer, default=8000)
     status = Column(SAEnum(StatusEnum), default=StatusEnum.active)
     current_throughput = Column(Float, default=0.0)
     last_seen = Column(BigInteger, default=lambda: int(time.time()))
 
-    tensor_parallel_size = Column(Integer, nullable=False, default=1)
+    # --- Parallelism ---
+    tensor_parallel_size = Column(
+        Integer,
+        nullable=False,
+        default=1,
+        comment="Number of GPUs for tensor parallelism. 1 = single GPU.",
+    )
 
+    # --- Memory & Context ---
+    gpu_memory_utilization = Column(
+        Float,
+        nullable=False,
+        default=0.90,
+        server_default="0.90",
+        comment="Fraction of GPU VRAM vLLM may allocate. Overrides VLLM_DEFAULT_GPU_MEM_UTIL.",
+    )
+    max_model_len = Column(
+        Integer,
+        nullable=True,
+        default=None,
+        comment="Max sequence length in tokens. Overrides VLLM_DEFAULT_MAX_MODEL_LEN. None = env default.",
+    )
+    max_num_seqs = Column(
+        Integer,
+        nullable=True,
+        default=None,
+        comment="Max concurrent sequences. Critical for vision — each image eats slots. None = vLLM default.",
+    )
+
+    # --- Quantization & Precision ---
+    quantization = Column(
+        String(32),
+        nullable=True,
+        default=None,
+        comment="Quantization scheme: 'awq', 'awq_marlin', 'gptq', 'bitsandbytes', or None for full precision.",
+    )
+    dtype = Column(
+        String(16),
+        nullable=True,
+        default=None,
+        comment="Compute dtype: 'float16', 'bfloat16', 'auto', or None to let vLLM decide.",
+    )
+
+    # --- Runtime Behaviour ---
+    enforce_eager = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default="0",
+        comment="Disable CUDA graphs. Slower but useful for debugging OOM crashes.",
+    )
+
+    # --- Multimodal Limits ---
+    limit_mm_per_prompt = Column(
+        JSON,
+        nullable=True,
+        default=None,
+        comment='Per-modality token cap per request. e.g. {"image": 2, "video": 0}. None = vLLM default.',
+    )
+
+    # --- Relationships (always last) ---
     base_model = relationship("BaseModel")
     fine_tuned_model = relationship("FineTunedModel")
