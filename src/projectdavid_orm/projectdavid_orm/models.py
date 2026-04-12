@@ -892,6 +892,11 @@ class InferenceDeployment(Base):
     Hyperparams stored here override environment-level defaults at deploy time.
     The reconciler reads these fields and passes them directly to vLLM engine args.
     None values fall back to the VLLM_DEFAULT_* env vars in inference_worker.py.
+
+    Vision kwargs resolution priority:
+      1. mm_processor_kwargs DB column  — set via activation API
+      2. _VISION_FAMILY_CONFIGS registry — inference_worker.py family defaults
+      3. vLLM built-in defaults         — no kwargs injected for unknown families
     """
 
     __tablename__ = "inference_deployments"
@@ -970,7 +975,19 @@ class InferenceDeployment(Base):
         JSON,
         nullable=True,
         default=None,
-        comment='Per-modality token cap per request. e.g. {"image": 2, "video": 0}. None = vLLM default.',
+        comment='Per-modality token cap per request. e.g. {"image": 2, "video": 0}. None = family registry default.',
+    )
+    mm_processor_kwargs = Column(
+        JSON,
+        nullable=True,
+        default=None,
+        comment=(
+            "Processor-level kwargs passed to vLLM multimodal processor at engine init. "
+            "Overrides family registry defaults (_VISION_FAMILY_CONFIGS) when set. "
+            'Examples: {"min_pixels": 784, "max_pixels": 50176} for Qwen2.5-VL, '
+            '{"num_crops": 4} for Phi-3.5-Vision. '
+            "None = fall back to inference_worker.py family registry defaults."
+        ),
     )
 
     # --- Relationships (always last) ---
