@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.8.0...v1.9.0) (2026-04-19)
+
+
+### Features
+
+* **schema:** add cancelled_at column to TrainingJob ([134d8cf](https://github.com/project-david-ai/projectdavid-orm/commit/134d8cf63d1ec889841a7bdae5f39efbf5b9ee43))
+
 # [1.8.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.7.0...v1.8.0) (2026-04-12)
 
 
