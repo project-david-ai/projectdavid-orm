@@ -752,6 +752,7 @@ class TrainingJob(Base):
     started_at = Column(BigInteger, nullable=True)
     completed_at = Column(BigInteger, nullable=True)
     failed_at = Column(BigInteger, nullable=True)
+    cancelled_at = Column(BigInteger, nullable=True)
     last_error = Column(Text, nullable=True)
     metrics = Column(JSON, nullable=True)
     output_path = Column(String(512), nullable=True)
