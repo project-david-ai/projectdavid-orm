@@ -930,11 +930,14 @@ class InferenceDeployment(Base):
     # --- Memory & Context ---
     gpu_memory_utilization = Column(
         Float,
-        nullable=False,
-        default=0.90,
-        server_default="0.90",
-        comment="Fraction of GPU VRAM vLLM may allocate. Overrides VLLM_DEFAULT_GPU_MEM_UTIL.",
+        nullable=True,
+        default=None,
+        comment=(
+            "Fraction of GPU VRAM vLLM may allocate. "
+            "None = fall back to VLLM_DEFAULT_GPU_MEM_UTIL."
+        ),
     )
+
     max_model_len = Column(
         Integer,
         nullable=True,
