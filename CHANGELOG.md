@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/project-david-ai/projectdavid-orm/compare/v1.9.0...v1.9.1) (2026-08-27)
+
+
+### Bug Fixes
+
+* allow inference GPU memory fallback ([6936f4a](https://github.com/project-david-ai/projectdavid-orm/commit/6936f4ab89ea1be7b264d832f74a7ffaaa7384a4))
+
 # [1.9.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.8.0...v1.9.0) (2026-04-19)
 
 
