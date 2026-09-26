@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.9.1...v1.10.0) (2026-09-26)
+
+
+### Features
+
+* add MCP registration persistence models ([61867c1](https://github.com/project-david-ai/projectdavid-orm/commit/61867c139ed1fa2ca1de3d263a5a77dabf0242dd))
+
 ## [1.9.1](https://github.com/project-david-ai/projectdavid-orm/compare/v1.9.0...v1.9.1) (2026-08-27)
 
 
