@@ -180,6 +180,13 @@ class User(Base):
 
     audit_logs = relationship("AuditLog", back_populates="user", lazy="dynamic")
 
+    mcp_server_registrations = relationship(
+        "McpServerRegistration",
+        back_populates="owner",
+        cascade="all, delete-orphan",
+        lazy="select",
+    )
+
     __table_args__ = (
         UniqueConstraint(
             "oauth_provider", "provider_user_id", name="uq_user_oauth_provider_id"
@@ -487,6 +494,134 @@ class Assistant(Base):
         secondary="user_assistants",
         back_populates="assistants",
         lazy="select",
+    )
+
+    mcp_tools = relationship(
+        "AssistantMcpTool",
+        back_populates="assistant",
+        cascade="all, delete-orphan",
+        lazy="select",
+    )
+
+
+class McpServerRegistration(Base):
+    """A user-owned remote MCP server registration.
+
+    Credentials are intentionally absent. MCP-5A supports unauthenticated
+    Streamable HTTP registrations only until Project David has a dedicated
+    reversible secret-reference facility.
+    """
+
+    __tablename__ = "mcp_server_registrations"
+
+    id = Column(String(64), primary_key=True, index=True)
+
+    owner_id = Column(
+        String(64),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+
+    name = Column(String(128), nullable=False)
+
+    url = Column(Text, nullable=False)
+    normalized_url = Column(Text, nullable=False)
+
+    identity_key = Column(
+        String(64),
+        nullable=False,
+        comment=(
+            "Stable SHA-256 identity derived from transport + normalized URL. "
+            "Combined with owner_id to make registration idempotent."
+        ),
+    )
+
+    transport = Column(
+        String(32),
+        nullable=False,
+        default="streamable_http",
+        server_default="streamable_http",
+    )
+
+    timeout_seconds = Column(Float, nullable=False, default=30.0, server_default="30")
+
+    enabled = Column(Boolean, nullable=False, default=True, server_default="1")
+
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = Column(
+        DateTime,
+        nullable=False,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow,
+    )
+
+    owner = relationship("User", back_populates="mcp_server_registrations")
+
+    assistant_tools = relationship(
+        "AssistantMcpTool",
+        back_populates="registration",
+        cascade="all, delete-orphan",
+        lazy="select",
+    )
+
+    __table_args__ = (
+        UniqueConstraint(
+            "owner_id",
+            "identity_key",
+            name="uq_mcp_registration_owner_identity",
+        ),
+        Index("idx_mcp_registration_owner_enabled", "owner_id", "enabled"),
+    )
+
+
+class AssistantMcpTool(Base):
+    """Assistant-specific provenance for one discovered MCP tool."""
+
+    __tablename__ = "assistant_mcp_tools"
+
+    id = Column(String(64), primary_key=True, index=True)
+
+    assistant_id = Column(
+        String(64),
+        ForeignKey("assistants.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+
+    registration_id = Column(
+        String(64),
+        ForeignKey("mcp_server_registrations.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+
+    remote_name = Column(String(255), nullable=False)
+    canonical_id = Column(String(512), nullable=False)
+    provider_name = Column(String(64), nullable=False)
+
+    enabled = Column(Boolean, nullable=False, default=True, server_default="1")
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+
+    assistant = relationship("Assistant", back_populates="mcp_tools")
+    registration = relationship(
+        "McpServerRegistration",
+        back_populates="assistant_tools",
+    )
+
+    __table_args__ = (
+        UniqueConstraint(
+            "assistant_id",
+            "registration_id",
+            "remote_name",
+            name="uq_assistant_mcp_remote_tool",
+        ),
+        UniqueConstraint(
+            "assistant_id",
+            "provider_name",
+            name="uq_assistant_mcp_provider_name",
+        ),
+        Index("idx_assistant_mcp_registration", "registration_id"),
     )
 
 
