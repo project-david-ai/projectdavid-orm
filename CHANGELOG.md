@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.10.0...v1.11.0) (2026-09-27)
+
+
+### Features
+
+* add tenant credential persistence ([d222bc0](https://github.com/project-david-ai/projectdavid-orm/commit/d222bc0764dfb10ced00006b68a06c6a55d1b508))
+
 # [1.10.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.9.1...v1.10.0) (2026-09-26)
 
 
