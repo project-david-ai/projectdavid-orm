@@ -180,6 +180,13 @@ class User(Base):
 
     audit_logs = relationship("AuditLog", back_populates="user", lazy="dynamic")
 
+    credentials = relationship(
+        "Credential",
+        back_populates="owner",
+        cascade="all, delete-orphan",
+        lazy="select",
+    )
+
     mcp_server_registrations = relationship(
         "McpServerRegistration",
         back_populates="owner",
@@ -504,12 +511,58 @@ class Assistant(Base):
     )
 
 
+class Credential(Base):
+    """Tenant-owned encrypted credential material.
+
+    Plaintext credentials are never persisted. Decryption is owned by
+    the application credential service and requires deployment-supplied
+    root key material.
+    """
+
+    __tablename__ = "credentials"
+
+    id = Column(String(64), primary_key=True, index=True)
+
+    owner_id = Column(
+        String(64),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+
+    kind = Column(String(32), nullable=False)
+    encrypted_payload = Column(Text, nullable=False)
+    encryption_version = Column(
+        Integer,
+        nullable=False,
+        default=1,
+        server_default="1",
+    )
+
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = Column(
+        DateTime,
+        nullable=False,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow,
+    )
+
+    owner = relationship("User", back_populates="credentials")
+
+    mcp_server_registrations = relationship(
+        "McpServerRegistration",
+        back_populates="credential",
+        lazy="select",
+    )
+
+    __table_args__ = (Index("idx_credentials_owner_kind", "owner_id", "kind"),)
+
+
 class McpServerRegistration(Base):
     """A user-owned remote MCP server registration.
 
-    Credentials are intentionally absent. MCP-5A supports unauthenticated
-    Streamable HTTP registrations only until Project David has a dedicated
-    reversible secret-reference facility.
+    Authentication references generic tenant-owned encrypted credentials.
+    Raw credential material is never persisted on the registration itself.
     """
 
     __tablename__ = "mcp_server_registrations"
@@ -544,6 +597,20 @@ class McpServerRegistration(Base):
         server_default="streamable_http",
     )
 
+    auth_type = Column(
+        String(32),
+        nullable=False,
+        default="none",
+        server_default="none",
+    )
+
+    credential_id = Column(
+        String(64),
+        ForeignKey("credentials.id", ondelete="RESTRICT"),
+        nullable=True,
+        index=True,
+    )
+
     timeout_seconds = Column(Float, nullable=False, default=30.0, server_default="30")
 
     enabled = Column(Boolean, nullable=False, default=True, server_default="1")
@@ -557,6 +624,11 @@ class McpServerRegistration(Base):
     )
 
     owner = relationship("User", back_populates="mcp_server_registrations")
+
+    credential = relationship(
+        "Credential",
+        back_populates="mcp_server_registrations",
+    )
 
     assistant_tools = relationship(
         "AssistantMcpTool",
