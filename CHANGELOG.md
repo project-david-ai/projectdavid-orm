@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.11.0...v1.12.0) (2026-09-28)
+
+
+### Features
+
+* **schema:** add canonical message sequence ordering ([ca58196](https://github.com/project-david-ai/projectdavid-orm/commit/ca581964f244a704bd2dd8e7f8bacb65a24ee6d7))
+
 # [1.11.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.10.0...v1.11.0) (2026-09-27)
 
 
