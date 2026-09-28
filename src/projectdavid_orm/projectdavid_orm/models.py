@@ -9,6 +9,7 @@ from projectdavid_common.utilities.logging_service import LoggingUtility
 from sqlalchemy import JSON, BigInteger, Boolean, Column, DateTime
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy import (
+    FetchedValue,
     Float,
     ForeignKey,
     Index,
@@ -292,6 +293,15 @@ class Message(Base):
         String(64),
         nullable=True,
         comment="For messages with role='tool', this links back to the specific tool_call_id.",
+    )
+
+    sequence_no = Column(
+        BigInteger,
+        nullable=False,
+        unique=True,
+        index=True,
+        server_default=FetchedValue(),
+        comment="Canonical monotonic persistence order for conversation messages.",
     )
 
     created_at = Column(Integer, nullable=False)
