@@ -1,3 +1,11 @@
+## [1.13.1](https://github.com/project-david-ai/projectdavid-orm/compare/v1.13.0...v1.13.1) (2026-09-29)
+
+
+### Bug Fixes
+
+* **deps:** decouple ORM from Common runtime ([4e1ca2e](https://github.com/project-david-ai/projectdavid-orm/commit/4e1ca2e9b2a1b84d014fc0447849964bf974daf5))
+* **exports:** expose Scratchpad through public ORM API ([205ae03](https://github.com/project-david-ai/projectdavid-orm/commit/205ae03ebe801701d9c19ce83e1b59764a8ab93b))
+
 # [1.13.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.12.0...v1.13.0) (2026-09-29)
 
 
