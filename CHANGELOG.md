@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.12.0...v1.13.0) (2026-09-29)
+
+
+### Features
+
+* **schema:** add thread-associated scratchpad resource ([5e8d87c](https://github.com/project-david-ai/projectdavid-orm/commit/5e8d87c6641b4eed245feb42c373c91bd643cfc3))
+
 # [1.12.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.11.0...v1.12.0) (2026-09-28)
 
 
