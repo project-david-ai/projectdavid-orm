@@ -30,6 +30,8 @@ class OrmInterface:
     Action = Action
     # Sandbox model
     Sandbox = Sandbox
+    # Scratchpad model
+    Scratchpad = Scratchpad
     # File model
     File = File
     # FileStorage model

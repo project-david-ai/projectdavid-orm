@@ -15,6 +15,7 @@ from .ormInterface import (
     OrmInterface,
     Run,
     Sandbox,
+    Scratchpad,
     Thread,
     TrainingJob,
     User,
@@ -36,6 +37,7 @@ __all__ = [
     "Assistant",
     "Action",
     "Sandbox",
+    "Scratchpad",
     # File system
     "File",
     "FileStorage",
