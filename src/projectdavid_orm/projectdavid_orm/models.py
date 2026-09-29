@@ -195,6 +195,12 @@ class User(Base):
         lazy="select",
     )
 
+    scratchpads = relationship(
+        "Scratchpad",
+        back_populates="owner",
+        lazy="select",
+    )
+
     __table_args__ = (
         UniqueConstraint(
             "oauth_provider", "provider_user_id", name="uq_user_oauth_provider_id"
@@ -268,6 +274,72 @@ class Thread(Base):
         comment="Canonical creator/owner of this thread. Used for row-level access control.",
     )
     owner = relationship("User", foreign_keys=[owner_id], lazy="select")
+
+    scratchpad = relationship(
+        "Scratchpad",
+        back_populates="thread",
+        uselist=False,
+        cascade="all, delete-orphan",
+        single_parent=True,
+        lazy="select",
+    )
+
+
+class Scratchpad(Base):
+    """Tenant-owned working-memory resource associated with one thread."""
+
+    __tablename__ = "scratchpads"
+
+    id = Column(String(64), primary_key=True, index=True)
+
+    owner_id = Column(
+        String(64),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+
+    thread_id = Column(
+        String(64),
+        ForeignKey("threads.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = Column(
+        DateTime,
+        nullable=False,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow,
+    )
+
+    meta_data = Column(
+        MutableDict.as_mutable(JSON),
+        nullable=False,
+        default=dict,
+    )
+
+    owner = relationship(
+        "User",
+        back_populates="scratchpads",
+        lazy="select",
+    )
+
+    thread = relationship(
+        "Thread",
+        back_populates="scratchpad",
+        lazy="select",
+    )
+
+    __table_args__ = (
+        UniqueConstraint(
+            "thread_id",
+            name="uq_scratchpads_thread_id",
+        ),
+        Index(
+            "idx_scratchpads_owner_id",
+            "owner_id",
+        ),
+    )
 
 
 class Message(Base):
