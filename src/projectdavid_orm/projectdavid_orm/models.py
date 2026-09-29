@@ -3,9 +3,6 @@ import time
 from datetime import datetime
 
 from passlib.context import CryptContext
-from projectdavid_common import ValidationInterface
-from projectdavid_common.schemas.enums import StatusEnum
-from projectdavid_common.utilities.logging_service import LoggingUtility
 from sqlalchemy import JSON, BigInteger, Boolean, Column, DateTime
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy import (
@@ -22,11 +19,9 @@ from sqlalchemy import (
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm import joinedload, relationship
 
+from projectdavid_orm.enums import StatusEnum
+
 from .base import Base
-
-logger = LoggingUtility()
-
-validation = ValidationInterface
 
 # --- Association Tables ---
 
@@ -428,7 +423,7 @@ class Run(Base):
     required_action = Column(String(256), nullable=True)
     response_format = Column(String(64), nullable=True)
 
-    status = Column(SAEnum(validation.StatusEnum), nullable=False)
+    status = Column(SAEnum(StatusEnum), nullable=False)
 
     thread_id = Column(String(64), nullable=False)
     tool_choice = Column(String(64), nullable=True)

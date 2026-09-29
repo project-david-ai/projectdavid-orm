@@ -19,6 +19,8 @@ dependencies = [
   "pymysql",
   "pydantic>=2.0",
   "python-dotenv",
+  "passlib==1.7.4",
+  "bcrypt==4.0.1",
 ]
 
 [project.optional-dependencies]
