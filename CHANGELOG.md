@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.13.1...v1.14.0) (2026-11-13)
+
+
+### Features
+
+* **orm:** add durable execution lineage and forensic audit models ([21f89d3](https://github.com/project-david-ai/projectdavid-orm/commit/21f89d385273d21e39fcc32911039fcde6457032))
+
 ## [1.13.1](https://github.com/project-david-ai/projectdavid-orm/compare/v1.13.0...v1.13.1) (2026-09-29)
 
 
