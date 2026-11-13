@@ -21,6 +21,10 @@ from sqlalchemy.orm import joinedload, relationship
 
 from projectdavid_orm.enums import StatusEnum
 
+# Register execution-lineage models on the shared declarative Base.
+# This import is intentionally placed after existing model declarations.
+# Required for Alembic and normal ORM metadata discovery.
+from . import execution_ledger as _execution_ledger  # noqa: E402, F401
 from .base import Base
 
 # --- Association Tables ---
