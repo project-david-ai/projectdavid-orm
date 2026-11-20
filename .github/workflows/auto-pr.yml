@@ -54,7 +54,7 @@ jobs:
         id: app-token
         uses: actions/create-github-app-token@v3
         with:
-          client-id: ${{ vars.AUTO_PR_APP_CLIENT_ID }}
+          app-id: 5843240
           private-key: ${{ secrets.AUTO_PR_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
           repositories: projectdavid-orm
