@@ -529,6 +529,17 @@ class Assistant(Base):
         ),
     )
 
+    is_protected = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default="0",
+        comment=(
+            "Internal managed assistant. "
+            "Excluded from ordinary assistant management."
+        ),
+    )
+
     # --- Agentic Behavior Extensions (Level 3) ---
     max_turns = Column(
         Integer,
