@@ -1,3 +1,10 @@
+# [1.15.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.14.0...v1.15.0) (2026-11-21)
+
+
+### Features
+
+* **orm:** add protected user-scoped API key classification ([8f8b3f8](https://github.com/project-david-ai/projectdavid-orm/commit/8f8b3f8e0ab2be8745589d609117d3d4f5d38dbc))
+
 # [1.14.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.13.1...v1.14.0) (2026-11-13)
 
 
