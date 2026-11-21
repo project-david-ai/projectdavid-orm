@@ -1,3 +1,10 @@
+# [1.16.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.15.0...v1.16.0) (2026-11-21)
+
+
+### Features
+
+* **orm:** add protected assistant classification ([e4d45e4](https://github.com/project-david-ai/projectdavid-orm/commit/e4d45e460e8df05d4afd9db774289c2ce079aed8))
+
 # [1.15.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.14.0...v1.15.0) (2026-11-21)
 
 
