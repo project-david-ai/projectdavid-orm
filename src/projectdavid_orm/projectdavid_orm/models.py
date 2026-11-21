@@ -85,8 +85,18 @@ class ApiKey(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     expires_at = Column(DateTime, nullable=True)
     last_used_at = Column(DateTime, nullable=True)
+
     is_active = Column(Boolean, default=True, nullable=False)
+
+    is_protected = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default="0",
+    )
+
     user = relationship("User", back_populates="api_keys")
+
     __table_args__ = (Index("idx_apikey_user_id_active", "user_id", "is_active"),)
 
     @staticmethod
