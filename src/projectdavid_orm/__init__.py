@@ -23,6 +23,7 @@ from .ormInterface import (
     VectorStoreFile,
 )
 from .projectdavid_orm.base import Base
+from .projectdavid_orm.provider_keys import ProviderKey
 
 __all__ = [
     "Base",
@@ -30,6 +31,7 @@ __all__ = [
     # Core entities
     "User",
     "ApiKey",
+    "ProviderKey",
     "AuditLog",
     "Thread",
     "Message",

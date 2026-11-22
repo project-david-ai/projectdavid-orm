@@ -25,6 +25,7 @@ from projectdavid_orm.enums import StatusEnum
 # This import is intentionally placed after existing model declarations.
 # Required for Alembic and normal ORM metadata discovery.
 from . import execution_ledger as _execution_ledger  # noqa: E402, F401
+from . import provider_keys as _provider_keys  # noqa: E402, F401
 from .base import Base
 
 # --- Association Tables ---
@@ -657,7 +658,14 @@ class Credential(Base):
         lazy="select",
     )
 
-    __table_args__ = (Index("idx_credentials_owner_kind", "owner_id", "kind"),)
+    __table_args__ = (
+        UniqueConstraint(
+            "id",
+            "owner_id",
+            name="uq_credentials_id_owner",
+        ),
+        Index("idx_credentials_owner_kind", "owner_id", "kind"),
+    )
 
 
 class McpServerRegistration(Base):
