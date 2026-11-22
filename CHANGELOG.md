@@ -1,3 +1,10 @@
+# [1.17.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.16.0...v1.17.0) (2026-11-22)
+
+
+### Features
+
+* **orm:** add user-scoped provider key model ([26a4155](https://github.com/project-david-ai/projectdavid-orm/commit/26a4155aa401b839cd81c8f68b86b3489ca6ead5))
+
 # [1.16.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.15.0...v1.16.0) (2026-11-21)
 
 
