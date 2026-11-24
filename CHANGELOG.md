@@ -1,3 +1,10 @@
+# [1.18.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.17.0...v1.18.0) (2026-11-24)
+
+
+### Features
+
+* **orm:** add durable account erasure receipts ([9cbca40](https://github.com/project-david-ai/projectdavid-orm/commit/9cbca40e89232b7e7672bf447a65e9a65a219a06))
+
 # [1.17.0](https://github.com/project-david-ai/projectdavid-orm/compare/v1.16.0...v1.17.0) (2026-11-22)
 
 
