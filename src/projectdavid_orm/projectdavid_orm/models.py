@@ -1314,3 +1314,26 @@ class InferenceDeployment(Base):
     # --- Relationships (always last) ---
     base_model = relationship("BaseModel")
     fine_tuned_model = relationship("FineTunedModel")
+
+
+class AccountErasure(Base):
+    """Durable account-erasure state and completion receipt.
+
+    Independent of the User lifecycle so that confirmed erasure remains
+    verifiable after the corresponding user record has been removed.
+
+    The subject hash is pseudonymous reconciliation evidence.
+    It must not be treated as anonymous data.
+    """
+
+    __tablename__ = "account_erasures"
+
+    subject_hash = Column(String(64), primary_key=True)
+
+    state = Column(String(24), nullable=False)
+
+    created_at = Column(BigInteger, nullable=False)
+
+    completed_at = Column(BigInteger, nullable=True)
+
+    __table_args__ = {"mysql_engine": "InnoDB"}
