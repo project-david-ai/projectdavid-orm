@@ -23,6 +23,7 @@ from .ormInterface import (
     VectorStoreFile,
 )
 from .projectdavid_orm.base import Base
+from .projectdavid_orm.models import AccountErasure
 from .projectdavid_orm.provider_keys import ProviderKey
 
 __all__ = [
@@ -30,6 +31,7 @@ __all__ = [
     "OrmInterface",
     # Core entities
     "User",
+    "AccountErasure",
     "ApiKey",
     "ProviderKey",
     "AuditLog",
